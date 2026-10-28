@@ -1,0 +1,100 @@
+@import url('./theme.css');
+.search-box{position:relative;margin-bottom:1.5rem}
+.search-box i{position:absolute;left:.75rem;top:50%;transform:translateY(-50%);color:var(--gray-color)}
+.search-box input{width:100%;padding:.5rem .75rem .5rem 2.25rem;border:1px solid var(--border-color);border-radius:var(--radius);background:var(--card-bg);color:var(--text-color)}
+.module-grid{display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.resource-card{display:flex;gap:1rem;align-items:center;padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius);background:var(--card-bg);transition:var(--transition)}
+.resource-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.resource-icon{font-size:2rem;color:var(--primary-color)}
+.resource-info h3{margin:.2rem 0 .4rem;font-size:1rem}
+.resource-info p{font-size:.85rem;color:var(--text-light)}
+.resource-actions{margin-top:.5rem;display:flex;gap:.5rem}
+
+/* project-docs.css - 添加分页样式 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+.pagination .disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@import url('./theme.css');
+
+.search-box {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.search-box i {
+    position: absolute;
+    left: .75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-color);
+}
+
+.search-box input {
+    width: 100%;
+    padding: .5rem .75rem .5rem 2.25rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+    color: var(--text-color);
+}
+
+.module-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+/* 分页样式 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 1rem;
+}
+
+.pagination .disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 骨架屏样式 */
+.skeleton-container {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: var(--radius);
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* 浅色边框变量 */
+:root {
+    --border-light: #eaeaea;
+    --primary-light: rgba(79, 70, 229, 0.1);
+}

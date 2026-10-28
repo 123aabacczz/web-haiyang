@@ -1,0 +1,140 @@
+@import url('./theme.css');
+.settings-container{display:grid;gap:2rem}
+.settings-section{border:1px solid var(--border-color);border-radius:var(--radius);padding:1.5rem;background:var(--card-bg)}
+.settings-section h3{margin-bottom:1rem;font-size:1.1rem}
+.settings-item{display:flex;justify-content:space-between;align-items:center;padding:.8rem 0;border-bottom:1px solid var(--border-color)}
+.settings-item:last-child{border-bottom:none}
+.toggle-switch{position:relative;display:inline-block;width:42px;height:24px}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--border-color);transition:.3s;border-radius:24px}
+.toggle-slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:#fff;transition:.3s;border-radius:50%}
+input:checked+.toggle-slider{background:var(--primary-color)}
+input:checked+.toggle-slider:before{transform:translateX(18px)}
+/* 模态框样式 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: var(--card-bg);
+  margin: 10% auto;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 1.5rem;
+  font-weight: bold;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+
+.close:hover,
+.close:focus {
+  color: var(--text-color);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 表单样式 */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--input-bg);
+  color: var(--text-color);
+}
+
+/* 设备列表样式 */
+.device-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.device-item:last-child {
+  border-bottom: none;
+}
+
+.device-info h4 {
+  margin: 0 0 0.5rem 0;
+}
+
+.device-info p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+/* 添加当前选中项的高亮样式 */
+  .settings-item.active {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-left: 3px solid var(--primary-color);
+    padding-left: calc(1.5rem - 3px);
+  }
+
+  /* 添加快速访问栏中的设置按钮样式 */
+  .nav-settings-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    color: var(--text-color);
+    transition: var(--transition);
+    font-weight: 500;
+  }
+
+  .nav-settings-btn:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--primary-color);
+  }
+
+  .nav-settings-btn.active {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: var(--primary-color);
+  }
+
+  /* 设置项高亮样式 */
+  .settings-item.active {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-left: 3px solid var(--primary-color);
+    padding-left: calc(1.5rem - 3px);
+  }
+
+  /* 设置项悬停效果 */
+  .settings-item:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .settings-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+  }

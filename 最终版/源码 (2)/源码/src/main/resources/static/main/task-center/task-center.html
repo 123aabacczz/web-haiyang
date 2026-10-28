@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>任务大厅 - 知识协作平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide@0.263.1/dist/css/lucide.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="../main.css?v=20261028" />
+    <link rel="stylesheet" href="task-center.css?v=20261028" />
+    <script src="../theme.js?v=20261028"></script>
+</head>
+
+<body>
+<!-- 导航栏 -->
+<header>
+  <div class="container">
+    <div class="navbar">
+      <div class="logo">
+        <i class="fas fa-brain"></i>
+        <span>知识协作平台</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="../main.html" class="nav-link active" aria-current="page">
+          <i class="fas fa-home"></i> 返回主页
+        </a>
+
+        <!-- 协作中心下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            协作中心 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../task-center/task-center.html" class="nav-link">任务中心</a>
+            <a href="../schedule-center/schedule-center.html" class="nav-link">日程中心</a>
+            <a href="../team-management/team-management.html" class="nav-link">成员中心</a>
+          </div>
+        </div>
+
+        <!-- 知识库下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            知识库 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../library/library.html" class="nav-link">资料库</a>
+            <a href="../learning-area/learning-area.html" class="nav-link">学习区</a>
+          </div>
+        </div>
+
+        <a href="../personal-center/personal-center.html" class="nav-link">个人中心</a>
+      </nav>
+
+      <!-- 右侧功能：搜索、主题、通知、用户信息 -->
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="搜索内容、文档或成员..." id="global-search" aria-label="全局搜索">
+        </div>
+
+        <div class="theme-toggle">
+          <input type="checkbox" id="theme-switch" hidden aria-label="切换主题">
+          <label for="theme-switch" class="toggle-label">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+            <span class="toggle-ball"></span>
+          </label>
+        </div>
+
+        <div class="notifications" id="notifications-btn" aria-label="通知">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </div>
+
+        <!-- 用户信息部分 -->
+        <div class="user-info" id="user-info-btn">
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+          <div class="user-details">
+            <div class="user-name" id="header-user-name">加载中...</div>
+            <div class="user-rank" id="header-user-rank">加载中...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 任务中心主体 -->
+<div id="task-center" class="module-content active">
+    <!-- 顶部全景用户信息栏 -->
+    <section class="top-dashboard">
+        <!-- 左侧欢迎 + 等级 -->
+        <div class="dash-left">
+            <div class="welcome">
+                <img src="../../images/default-avatar.jpg" alt="avatar" class="avatar">
+                <div>
+                    <div class="good-day">上午好！👋</div>
+                    <div class="level">
+                        <span class="badge lv1">Lv.1</span>
+                        <span class="exp">0 / 0 EXP</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间核心数据 -->
+        <div class="dash-center">
+            <div class="core-stats">
+                <div class="core-item">
+                    <div class="core-val" id="core-points">–</div>
+                    <div class="core-lab">积分值</div>
+                </div>
+                <div class="core-item">
+                    <div class="core-val" id="core-accepted">–</div>
+                    <div class="core-lab">已接受任务</div>
+                </div>
+                <div class="core-item">
+                    <div class="core-val" id="core-completed">–</div>
+                    <div class="core-lab">已完成任务</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧快捷区 -->
+        <div class="dash-right">
+            <div class="today-earn">
+                <i class="fas fa-coins"></i>
+                <div>
+                    <div class="earn-val" id="today-points">–</div>
+                    <div class="earn-lab">今日积分</div>
+                </div>
+            </div>
+            <div class="quick-btns">
+                <button class="btn btn-sm btn-primary" onclick="showCreateTaskModal()">
+                    <i class="fas fa-plus"></i> 发布任务
+                </button>
+                <button class="btn btn-sm btn-outline" id="refresh-tasks">
+                    <i class="fas fa-sync-alt"></i> 刷新
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 三栏布局 -->
+    <div class="task-layout-container">
+        <!-- 左侧筛选 -->
+        <div class="task-sidebar-left">
+            <div class="sidebar-section">
+                <h3><i class="fas fa-filter"></i> 筛选条件</h3>
+                <div class="filter-group">
+                    <div class="filter-item">
+                        <label>任务状态</label>
+                        <div class="checkbox-list">
+                            <label class="checkbox-label"><input type="checkbox" checked data-status="not-started"> 待接受</label>
+                            <label class="checkbox-label"><input type="checkbox" checked data-status="in-progress"> 进行中</label>
+                            <label class="checkbox-label"><input type="checkbox" checked data-status="review"> 待验收</label>
+                            <label class="checkbox-label"><input type="checkbox" data-status="completed"> 已完成</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-item">
+                        <label>任务类型</label>
+                        <div class="checkbox-list">
+                            <label class="checkbox-label"><input type="checkbox" checked data-type="main-quest"> 主线任务</label>
+                            <label class="checkbox-label"><input type="checkbox" checked data-type="daily-quest"> 日常任务</label>
+                            <label class="checkbox-label"><input type="checkbox" checked data-type="bounty"> 悬赏任务</label>
+                            <label class="checkbox-label"><input type="checkbox" data-type="team"> 团队任务</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-item">
+                        <label>优先级</label>
+                        <div class="checkbox-list">
+                            <label class="checkbox-label"><input type="checkbox" checked data-priority="critical"> 紧急</label>
+                            <label class="checkbox-label"><input type="checkbox" checked data-priority="high"> 高</label>
+                            <label class="checkbox-label"><input type="checkbox" checked data-priority="medium"> 中</label>
+                            <label class="checkbox-label"><input type="checkbox" checked data-priority="low"> 低</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-item">
+                        <label>标签筛选</label>
+                        <div class="tag-cloud" id="tag-cloud-container">
+                            <!-- 标签将通过JavaScript动态生成 -->
+                            <span class="task-tag">前端</span>
+                            <span class="task-tag">后端</span>
+                            <span class="task-tag">设计</span>
+                            <span class="task-tag">文档</span>
+                            <span class="task-tag">测试</span>
+                            <span class="task-tag">紧急</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 修改热门任务部分为热门任务标签 -->
+            <div class="sidebar-section">
+                <h3><i class="fas fa-fire"></i> 热门任务标签</h3>
+                <div class="tag-cloud" id="hot-tags-container">
+                    <!-- 热门标签将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间任务列表 -->
+        <div class="task-main-content">
+            <div class="filter-info-bar">
+                <div class="filter-info" id="filter-info">
+                    <span><i class="fas fa-filter"></i> 当前筛选: </span>
+                    <span id="active-filter-text">无筛选条件</span>
+                    <button class="btn btn-sm btn-link" id="clear-filters">
+                        <i class="fas fa-times"></i> 清空筛选
+                    </button>
+                </div>
+                <div class="selected-tags" id="selected-tags">
+                    <!-- 选中的标签将在这里显示 -->
+                </div>
+            </div>
+            <div class="task-toolbar">
+                <div class="search-box task-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="搜索任务..." id="task-search-input" />
+                </div>
+                <!-- 修改.sort-options部分 -->
+                <div class="sort-options">
+                    <select class="form-control form-control-sm" id="task-sort-select">
+                        <option value="priority">按优先级排序</option>
+                        <option value="deadline">按截止日期排序</option>
+                        <option value="reward">按奖励排序</option>
+                        <option value="created">按创建时间排序</option>
+                    </select>
+                    <button class="btn btn-sm btn-outline" id="sort-direction">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="task-view" id="task-list-view">
+                <!-- 动态渲染区，初始为空 -->
+            </div>
+
+            <!-- 分页 -->
+            <div class="task-pagination">
+                <button class="btn btn-outline btn-sm" id="prev-page" disabled>
+                    <i class="fas fa-chevron-left"></i> 上一页
+                </button>
+                <div class="pagination-pages" id="pagination-pages">
+                    <!-- 页码将通过JS动态生成 -->
+                </div>
+                <button class="btn btn-outline btn-sm" id="next-page">
+                    下一页 <i class="fas fa-chevron-right"></i>
+                </button>
+                <div class="pagination-info">
+                    <span id="page-info">第 1 页，共 1 页</span>
+                    <select class="form-control form-control-sm" id="page-size-select">
+                        <option value="5">5条/页</option>
+                        <option value="10" selected>10条/页</option>
+                        <option value="25">25条/页</option>
+                        <option value="100">100条/页</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧信息栏 -->
+        <div class="ranking-container">
+            <div class="ranking-tabs">
+                <button class="ranking-tab active" data-target="team-ranking">团队排名</button>
+                <button class="ranking-tab" data-target="personal-ranking">个人排名</button>
+            </div>
+
+            <div id="team-ranking" class="ranking-panel active">
+                <h3>团队积分排名（前10）</h3>
+                <ol class="ranking-list" id="team-ranking-list"></ol>
+            </div>
+
+            <div id="personal-ranking" class="ranking-panel">
+                <h3>个人积分排名（前50）</h3>
+                <ol class="ranking-list" id="personal-ranking-list"></ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 发布任务模态框 -->
+<div id="create-task-modal" class="modal" style="display: none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3><i class="fas fa-plus"></i> 发布新任务</h3>
+            <button class="modal-close"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <form id="create-task-form">
+                <div class="form-group">
+                    <label for="task-title">任务标题 *</label>
+                    <input type="text" id="task-title" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="task-description">任务描述 *</label>
+                    <textarea id="task-description" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task-type">任务类型 *</label>
+                        <select id="task-type" class="form-control" required>
+                            <option value="main-quest">主线任务</option>
+                            <option value="daily-quest">日常任务</option>
+                            <option value="bounty">悬赏任务</option>
+                            <option value="team">团队任务</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-priority">优先级 *</label>
+                        <select id="task-priority" class="form-control" required>
+                            <option value="4">紧急</option>
+                            <option value="3">高</option>
+                            <option value="2">中</option>
+                            <option value="1">低</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="task-assignee">负责人 *</label>
+                    <select id="task-assignee" class="form-control" required>
+                        <option value="">请选择负责人</option>
+                        <!-- 选项将通过JavaScript动态添加 -->
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task-reward">积分奖励 *</label>
+                        <input type="number" id="task-reward" class="form-control" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-deadline">截止日期</label>
+                        <input type="date" id="task-deadline" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>任务标签</label>
+                    <div class="tag-input-container">
+                        <input type="text" id="task-tags-input" class="form-control" placeholder="输入标签后按回车添加">
+                        <div id="task-tags-preview" class="tags-preview"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="cancel-create-task">取消</button>
+            <button type="button" class="btn btn-primary" id="submit-create-task">发布任务</button>
+        </div>
+    </div>
+</div>
+
+<!-- 统一脚本 -->
+<script src="task-center.js?v=20261027"></script>
+</body>
+</html>

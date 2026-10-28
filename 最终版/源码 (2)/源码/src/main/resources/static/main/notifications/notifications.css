@@ -1,0 +1,715 @@
+/* notifications.css - 通知系统完整样式 */
+
+:root {
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --danger-color: #ef4444;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --text-color: #1f2937;
+  --text-light: #6b7280;
+  --border-color: #e5e7eb;
+  --card-bg: #ffffff;
+  --light-bg: #f9fafb;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Poppins', sans-serif;
+  background-color: #f3f4f6;
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 导航栏样式 */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px; /* 增加水平内边距 */
+  background-color: white;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 20px; /* 添加元素间距 */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700; /* 增加字体粗细 */
+  font-size: 20px; /* 增大字体 */
+  color: var(--primary-color); /* 使用主题色 */
+  white-space: nowrap; /* 防止换行 */
+}
+
+.logo i {
+  color: var(--primary-color);
+  font-size: 24px; /* 增大图标 */
+}
+
+.nav-links {
+  display: flex;
+  gap: 10px;
+  flex: 1; /* 占据可用空间 */
+  justify-content: center; /* 居中导航链接 */
+  margin: 0 20px; /* 增加左右外边距 */
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--text-light);
+  font-weight: 500;
+  padding: 10px 16px; /* 增加内边距 */
+  border-radius: var(--radius);
+  transition: var(--transition);
+  position: relative;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--primary-color);
+  background-color: rgba(79, 70, 229, 0.1);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -16px; /* 定位到导航栏底部 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+}
+
+/* 用户信息样式 */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap; /* 防止换行 */
+}
+
+.user-avatar {
+  width: 42px; /* 稍微增大 */
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color), #7c73e6); /* 渐变背景 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px; /* 增大图标 */
+  border: 2px solid rgba(255, 255, 255, 0.3); /* 添加边框 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 600; /* 增加字体粗细 */
+  font-size: 14px;
+}
+
+.user-rank {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 4px; /* 增加下边距 */
+}
+
+.user-exp-container {
+  width: 100px;
+  margin-top: 2px;
+  position: relative;
+}
+
+.user-exp-container:hover::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 10px;
+  background-color: #333;
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 101;
+}
+
+.user-exp-progress {
+  width: 100%;
+  height: 6px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.user-exp-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color), #7c73e6); /* 渐变进度条 */
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 15px;
+    flex-wrap: wrap; /* 允许换行 */
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .nav-links {
+    order: 3; /* 移动到第三行 */
+    width: 100%;
+    margin: 10px 0 0;
+    justify-content: space-around;
+    overflow-x: auto; /* 允许水平滚动 */
+    padding-bottom: 5px;
+  }
+
+  .nav-link {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .user-info {
+    margin-left: auto; /* 靠右对齐 */
+  }
+}
+
+/* 按钮样式 */
+.btn {
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--border-color);
+}
+
+.btn-outline:hover {
+  background-color: rgba(79, 70, 229, 0.1);
+}
+
+/* 1. 通知页面整体布局 */
+.notifications-page {
+  padding: 20px 0;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-header h1 i {
+  color: var(--primary-color);
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* 2. 通知筛选区域 */
+.notification-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 5px;
+}
+
+.filter-tab {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+  border: 1px solid var(--border-color);
+}
+
+.filter-tab.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.filter-tab:hover:not(.active) {
+  background-color: var(--border-color);
+}
+
+.filter-options {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  display: none;
+}
+
+.checkmark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-color);
+  border-radius: 3px;
+  display: inline-block;
+  position: relative;
+  transition: var(--transition);
+}
+
+.checkbox-label input:checked + .checkmark {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.checkbox-label input:checked + .checkmark::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* 3. 通知列表容器 */
+.notifications-list {
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+/* 4. 通知项基础样式 */
+.notification-item {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  transition: var(--transition);
+  position: relative;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background-color: rgba(79, 70, 229, 0.05);
+}
+
+.notification-item.read {
+  opacity: 0.7;
+  background-color: var(--light-bg);
+}
+
+.notification-item.unread {
+  background-color: rgba(79, 70, 229, 0.08);
+}
+
+.unread-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--primary-color);
+  display: none;
+}
+
+.notification-item.unread .unread-indicator {
+  display: block;
+}
+
+/* 5. 通知图标 */
+.notification-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+.notification-icon.system {
+  background-color: rgba(79, 70, 229, 0.1);
+  color: var(--primary-color);
+}
+
+.notification-icon.task {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--danger-color);
+}
+
+.notification-icon.comment {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--success-color);
+}
+
+.notification-icon.meeting {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: var(--warning-color);
+}
+
+/* 6. 通知内容区域 */
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.notification-badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-new {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.badge-type {
+  background-color: var(--border-color);
+  color: var(--text-light);
+}
+
+.notification-text {
+  color: var(--text-color);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.notification-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.notification-action {
+  color: var(--primary-color);
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.notification-action:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* 7. 通知面板（下拉式） */
+.notification-panel {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 350px;
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  z-index: 1000;
+  display: none;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-panel.active {
+  display: block;
+}
+
+.notification-header {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.notification-tab {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition);
+}
+
+.notification-tab.active {
+  border-bottom-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.notification-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.notification-footer {
+  padding: 10px 15px;
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+}
+
+/* 8. 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-light);
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  margin-bottom: 20px;
+}
+
+/* 9. 加载更多 */
+.load-more {
+  text-align: center;
+  margin-top: 30px;
+}
+
+/* 10. 通知计数器 */
+.notification-count-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: var(--danger-color);
+  color: white;
+  font-size: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 11. 响应式设计 */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .notification-filters {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .filter-tabs {
+    flex-wrap: wrap;
+  }
+
+  .notification-item {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .notification-panel {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: var(--radius) var(--radius) 0 0;
+    max-height: 70vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .notification-item {
+    padding: 12px;
+  }
+
+  .notification-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .notification-text {
+    font-size: 14px;
+  }
+}
+
+/* ===== 深色主题 ===== */
+html[data-theme="dark"] {
+  --text-color: #e5e7eb;
+  --text-light: #94a3b8;
+  --border-color: #334155;
+  --card-bg: #1e293b;
+  --light-bg: #273449;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] body {
+  background-color: #0f172a;
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .navbar {
+  background-color: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+html[data-theme="dark"] .logo,
+html[data-theme="dark"] .logo i,
+html[data-theme="dark"] .nav-link:hover,
+html[data-theme="dark"] .nav-link.active,
+html[data-theme="dark"] .page-header h1 i,
+html[data-theme="dark"] .notification-action,
+html[data-theme="dark"] .notification-tab.active,
+html[data-theme="dark"] .notification-icon.system {
+  color: #818cf8;
+}
+
+html[data-theme="dark"] .notification-action:hover {
+  color: #a5b4fc;
+}
+
+html[data-theme="dark"] .notification-filters,
+html[data-theme="dark"] .notifications-list,
+html[data-theme="dark"] .notification-panel,
+html[data-theme="dark"] .notification-footer {
+  background-color: #1e293b;
+}
+
+html[data-theme="dark"] .btn-outline {
+  color: #818cf8;
+  border-color: #334155;
+}
+
+html[data-theme="dark"] .filter-tab:hover:not(.active) {
+  background-color: #334155;
+}
+
+html[data-theme="dark"] .notification-item:hover {
+  background-color: rgba(99, 102, 241, 0.12);
+}
+
+html[data-theme="dark"] .notification-item.read {
+  opacity: 0.85;
+  background-color: #273449;
+}
+
+html[data-theme="dark"] .notification-item.unread {
+  background-color: rgba(99, 102, 241, 0.16);
+}
+
+html[data-theme="dark"] .badge-type {
+  background-color: #334155;
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] .user-exp-progress {
+  background-color: rgba(255, 255, 255, 0.15);
+}

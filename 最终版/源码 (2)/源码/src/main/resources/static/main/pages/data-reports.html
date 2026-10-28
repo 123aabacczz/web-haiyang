@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>数据报告 - 知识协作平台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="./data-reports.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+</head>
+<body>
+<header id="header-nav"></header>
+
+<main class="main-content">
+    <div class="container">
+        <div class="module-header">
+            <h2 class="module-title"><i class="fas fa-chart-line"></i> 我的数据报告</h2>
+            <p class="module-subtitle">个人项目数据分析与可视化</p>
+            <div class="header-actions">
+                <button id="refresh-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> 刷新数据
+                </button>
+                <button id="export-btn" class="btn btn-secondary">
+                    <i class="fas fa-download"></i> 导出报告
+                </button>
+            </div>
+        </div>
+
+        <!-- 数据筛选器 -->
+        <div class="filters-container">
+            <div class="filter-group">
+                <label for="time-range">时间范围:</label>
+                <select id="time-range" class="filter-select">
+                    <option value="7">最近7天</option>
+                    <option value="30" selected>最近30天</option>
+                    <option value="90">最近3个月</option>
+                    <option value="365">最近1年</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="project-type">项目类型:</label>
+                <select id="project-type" class="filter-select">
+                    <option value="all" selected>所有类型</option>
+                    <option value="design">设计项目</option>
+                    <option value="development">开发项目</option>
+                    <option value="testing">测试项目</option>
+                    <option value="document">文档项目</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon"><i class="fas fa-folder-open"></i></div>
+                <div>
+                    <div class="metric-value">0</div>
+                    <div class="metric-label">项目总数</div>
+                    <div class="metric-change positive"><i class="fas fa-arrow-up"></i> 5%</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon"><i class="fas fa-check-circle"></i></div>
+                <div>
+                    <div class="metric-value">0%</div>
+                    <div class="metric-label">完成率</div>
+                    <div class="metric-change positive"><i class="fas fa-arrow-up"></i> 2%</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <div>
+                    <div class="metric-value">0%</div>
+                    <div class="metric-label">工作效率</div>
+                    <div class="metric-change negative"><i class="fas fa-arrow-down"></i> 3%</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div>
+                    <div class="metric-value">0</div>
+                    <div class="metric-label">延期项目</div>
+                    <div class="metric-change negative"><i class="fas fa-arrow-up"></i> 2</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading-state" class="loading-state">
+            <i class="fas fa-spinner fa-spin"></i> 正在加载数据...
+        </div>
+
+        <div id="error-state" class="error-state" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>加载数据失败，请检查网络连接或重新登录</p>
+            <button onclick="loadDataReports()" class="retry-btn">重试</button>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>项目状态分布</h3>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn" data-chart="statusChart">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                <canvas id="statusChart" height="200"></canvas>
+                <div class="chart-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">进行中:</span>
+                        <span class="summary-value" id="in-progress-count">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">已完成:</span>
+                        <span class="summary-value" id="completed-count">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>完成率趋势</h3>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn" data-chart="trendChart">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                <canvas id="trendChart" height="200"></canvas>
+                <div class="chart-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">平均完成率:</span>
+                        <span class="summary-value" id="avg-completion">0%</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">最高完成率:</span>
+                        <span class="summary-value" id="max-completion">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>里程碑进度</h3>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn" data-chart="milestoneChart">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                <canvas id="milestoneChart" height="200"></canvas>
+                <div class="chart-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">平均进度:</span>
+                        <span class="summary-value" id="avg-milestone">0%</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">最慢阶段:</span>
+                        <span class="summary-value" id="slowest-milestone">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新增项目列表部分 -->
+        <div class="reports-section">
+            <div class="section-header">
+                <h3><i class="fas fa-list"></i> 最近项目</h3>
+                <a href="/projects/list.html" class="view-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="reports-table-container">
+                <table class="reports-table">
+                    <thead>
+                    <tr>
+                        <th>项目名称</th>
+                        <th>类型</th>
+                        <th>开始日期</th>
+                        <th>截止日期</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="reports-table-body">
+                    <tr>
+                        <td colspan="6" class="table-loading">加载中...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- 图表全屏模态框 -->
+<div id="chart-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-chart-title">图表预览</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <canvas id="modal-chart" height="400"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="./data-reports.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+/* 注册容器 - 优化位置和大小 */
+.register-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(22, 16, 42, 0.85);
+    backdrop-filter: blur(16px);
+    border-radius: 14px; /* 减小圆角 */
+    padding: 18px; /* 减少内边距 */
+    width: 320px; /* 减小宽度 */
+    max-width: 90%;
+    z-index: 1;
+    box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.6),
+        inset 0 0 0 1px rgba(167, 132, 239, 0.4);
+    animation: fadeInUp 0.8s ease-out;
+    /* 确保不会超出边界 */
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 12px; /* 减少下边距 */
+}
+
+.register-header h2 {
+    font-size: 1.5rem; /* 减小标题大小 */
+    margin-bottom: 3px; /* 减小标题与副标题间距 */
+    background: linear-gradient(135deg, #a78cf9, #d5b8ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 8px rgba(157, 122, 229, 0.4);
+}
+
+.register-header p {
+    color: #d5b8ff;
+    font-size: 0.75rem; /* 减小描述字体大小 */
+    line-height: 1.3; /* 减小行高 */
+}
+
+/* 表单样式 - 重点优化行间距 */
+#registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 6px; /* 进一步减小行间距 */
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 2px; /* 减小下边距 */
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 3px; /* 减小标签下边距 */
+    font-size: 11px; /* 减小标签字体 */
+    color: #e8d8ff;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.form-group label i {
+    color: #b89cff;
+    width: 12px; /* 减小图标大小 */
+    text-align: center;
+    font-size: 11px; /* 减小图标大小 */
+}
+
+.input-icon {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ad8af9;
+    font-size: 12px; /* 减小图标大小 */
+    z-index: 2;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 6px 8px 6px 28px; /* 减小内边距 */
+    border: 1px solid rgba(167, 132, 239, 0.45);
+    border-radius: 6px; /* 减小圆角 */
+    background: rgba(30, 25, 55, 0.65);
+    color: #f0f0ff;
+    font-size: 12px; /* 减小字体 */
+    position: relative;
+    z-index: 1;
+    height: 32px; /* 减小高度 */
+    box-sizing: border-box;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #b89cff;
+    box-shadow: 0 0 6px rgba(167, 132, 239, 0.5);
+    background: rgba(35, 30, 60, 0.85);
+}
+
+.password-toggle {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ad8af9;
+    cursor: pointer;
+    z-index: 2;
+    font-size: 12px;
+}
+
+.password-toggle:hover {
+    color: #e0c0ff;
+}
+
+.error {
+    display: block;
+    font-size: 9px; /* 减小错误提示字体 */
+    color: #ff8b8b;
+    margin-top: 1px; /* 减小上边距 */
+    padding-left: 20px;
+    height: 12px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 美化按钮 */
+.register-btn {
+    background: linear-gradient(to right, #ad8af9, #8b78ee);
+    color: white;
+    border: none;
+    padding: 8px; /* 减小内边距 */
+    border-radius: 6px; /* 减小圆角 */
+    cursor: pointer;
+    font-size: 12px; /* 减小字体 */
+    display: block;
+    width: 100%;
+    margin-top: 8px; /* 减小上边距 */
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 3px 8px rgba(105, 20, 160, 0.5);
+    height: 36px; /* 减小高度 */
+}
+
+.register-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(105, 20, 160, 0.7);
+}
+
+/* 链接按钮样式 */
+.link-btns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px; /* 减小上边距 */
+    gap: 4px; /* 减小间隙 */
+}
+
+.link-btns a {
+    flex: 1;
+    text-align: center;
+    padding: 6px; /* 减小内边距 */
+    border-radius: 5px; /* 减小圆角 */
+    font-size: 10px; /* 减小字体 */
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px; /* 减小间隙 */
+    background: rgba(167, 132, 239, 0.15);
+    color: #d5b8ff;
+    border: 1px solid rgba(167, 132, 239, 0.3);
+    height: 30px; /* 减小高度 */
+    box-sizing: border-box;
+}
+
+.link-btns a:hover {
+    background: rgba(167, 132, 239, 0.3);
+    border-color: rgba(210, 180, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+.link-btns a i {
+    font-size: 9px; /* 减小图标大小 */
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .register-container {
+        padding: 15px;
+        width: 300px;
+    }
+
+    .register-header h2 {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-container {
+        width: 90%;
+        padding: 12px;
+        transform: translate(-50%, -50%) scale(0.9);
+        max-height: 95vh;
+    }
+
+    .link-btns {
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .register-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .input-group input {
+        padding: 5px 7px 5px 26px;
+        font-size: 11px;
+        height: 30px;
+    }
+
+    .link-btns a {
+        font-size: 9.5px;
+        padding: 5px;
+        height: 28px;
+    }
+
+    .register-btn {
+        height: 32px;
+        font-size: 11.5px;
+    }
+}
+
+/* 小屏幕特别优化 */
+@media (max-height: 700px) {
+    .register-container {
+        transform: translate(-50%, -50%) scale(0.85);
+        padding: 10px;
+    }
+
+    #registerForm {
+        gap: 4px;
+    }
+
+    .input-group input {
+        height: 28px;
+        padding: 4px 6px 4px 24px;
+    }
+
+    .register-btn {
+        height: 30px;
+        margin-top: 6px;
+    }
+
+    .link-btns a {
+        height: 26px;
+    }
+}
+
+

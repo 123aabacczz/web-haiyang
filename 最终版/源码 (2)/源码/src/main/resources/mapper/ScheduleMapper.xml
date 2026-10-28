@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ScheduleMapper">
+
+    <resultMap id="ScheduleResultMap" type="com.example.demo.model.Schedule">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="allDay" column="all_day"/>
+        <result property="type" column="type"/>
+        <result property="location" column="location"/>
+        <result property="description" column="description"/>
+        <result property="userId" column="user_id"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, title, start_time, end_time, all_day, type, location, description, user_id, created_at, updated_at
+    </sql>
+
+    <select id="selectByUserIdAndDateRange" resultMap="ScheduleResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM schedules
+        WHERE user_id = #{userId}
+        AND start_time BETWEEN #{start} AND #{end}
+        ORDER BY start_time ASC
+    </select>
+
+    <select id="selectUpcomingSchedules" resultMap="ScheduleResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM schedules
+        WHERE start_time >= #{startTime}
+        ORDER BY start_time ASC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+    <select id="selectById" resultMap="ScheduleResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM schedules
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.example.demo.model.Schedule" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO schedules (
+        title, start_time, end_time, all_day, type,
+        location, description, user_id, created_at, updated_at
+        ) VALUES (
+        #{title}, #{startTime}, #{endTime}, #{allDay}, #{type},
+        #{location}, #{description}, #{userId}, #{createdAt}, #{updatedAt}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.demo.model.Schedule">
+        UPDATE schedules
+        SET title = #{title},
+        start_time = #{startTime},
+        end_time = #{endTime},
+        all_day = #{allDay},
+        type = #{type},
+        location = #{location},
+        description = #{description},
+        updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM schedules
+        WHERE id = #{id}
+    </delete>
+
+    <select id="existsByIdAndUserId" resultType="boolean">
+        SELECT COUNT(1) > 0
+        FROM schedules
+        WHERE id = #{id} AND user_id = #{userId}
+    </select>
+
+    <select id="selectByUserIdAndType" resultMap="ScheduleResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM schedules
+        WHERE user_id = #{userId} AND type = #{type}
+        ORDER BY start_time ASC
+    </select>
+
+    <select id="selectByUserId" resultMap="ScheduleResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM schedules
+        WHERE user_id = #{userId}
+        ORDER BY start_time ASC
+    </select>
+
+    <select id="selectByDateRange" resultMap="ScheduleResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM schedules
+        WHERE start_time BETWEEN #{start} AND #{end}
+        ORDER BY start_time ASC
+    </select>
+
+    <!-- 删除重复的 selectUpcomingSchedules 定义 -->
+
+</mapper>

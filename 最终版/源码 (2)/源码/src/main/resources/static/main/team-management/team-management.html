@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>团队中心</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <!-- 添加在Font Awesome之后 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/orgchart/3.1.1/css/jquery.orgchart.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/orgchart/3.1.1/js/jquery.orgchart.min.js"></script>
+    <link rel="stylesheet" href="../main.css?v=20261028"/>
+    <link rel="stylesheet" href="team-management.css?v=20261028"/>
+    <script src="../theme.js?v=20261028"></script>
+</head>
+
+<body>
+<!-- 导航栏 -->
+<header>
+  <div class="container">
+    <div class="navbar">
+      <div class="logo">
+        <i class="fas fa-brain"></i>
+        <span>知识协作平台</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="../main.html" class="nav-link active" aria-current="page">
+          <i class="fas fa-home"></i> 返回主页
+        </a>
+
+        <!-- 协作中心下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            协作中心 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../task-center/task-center.html" class="nav-link">任务中心</a>
+            <a href="../schedule-center/schedule-center.html" class="nav-link">日程中心</a>
+            <a href="../team-management/team-management.html" class="nav-link">成员中心</a>
+          </div>
+        </div>
+
+        <!-- 知识库下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            知识库 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../library/library.html" class="nav-link">资料库</a>
+            <a href="../learning-area/learning-area.html" class="nav-link">学习区</a>
+          </div>
+        </div>
+
+        <a href="../personal-center/personal-center.html" class="nav-link">个人中心</a>
+      </nav>
+
+      <!-- 右侧功能：搜索、主题、通知、用户信息 -->
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="搜索内容、文档或成员..." id="global-search" aria-label="全局搜索">
+        </div>
+
+        <div class="theme-toggle">
+          <input type="checkbox" id="theme-switch" hidden aria-label="切换主题">
+          <label for="theme-switch" class="toggle-label">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+            <span class="toggle-ball"></span>
+          </label>
+        </div>
+
+        <div class="notifications" id="notifications-btn" aria-label="通知">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </div>
+
+        <!-- 用户信息部分 -->
+        <div class="user-info" id="user-info-btn">
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+          <div class="user-details">
+            <div class="user-name" id="header-user-name">加载中...</div>
+            <div class="user-rank" id="header-user-rank">加载中...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="team-management" class="module-content active">
+    <div class="module-header">
+        <h2 class="module-title">
+            <i class="fas fa-users"></i> 团队中心
+        </h2>
+        <p class="module-subtitle">高效协作，汇聚智慧，创造价值</p>
+        <div class="module-actions">
+            <button class="btn btn-primary" id="create-team-btn">
+                <i class="fas fa-plus"></i> 创建团队
+            </button>
+            <button class="btn btn-outline" id="join-team-btn">
+                <i class="fas fa-handshake"></i> 加入团队
+            </button>
+        </div>
+    </div>
+
+    <div class="team-management-container">
+        <!-- 左侧组织架构 -->
+        <div class="org-sidebar">
+            <!-- 组织架构 -->
+            <div class="org-hierarchy">
+                <h3><i class="fas fa-sitemap"></i> 组织架构</h3>
+                <div class="org-tree" id="org-tree">
+                    <!-- 动态加载组织架构 -->
+                </div>
+            </div>
+
+            <!-- 我的团队 -->
+            <div class="my-teams">
+                <h3><i class="fas fa-users"></i> 我的团队</h3>
+                <div class="team-list" id="my-teams-list">
+                    <!-- 动态加载我的团队 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧主内容 -->
+        <div class="team-main-content">
+            <!-- 团队头部 -->
+            <div class="team-header">
+                <div class="team-info">
+                    <h2 id="current-team-name">加载中...</h2>
+                    <p id="current-team-desc">加载中...</p>
+                    <div class="team-meta-info">
+                        <span class="meta-item"><i class="fas fa-calendar-alt"></i> 成立于 <span id="team-establish-date">加载中...</span></span>
+                        <span class="meta-item"><i class="fas fa-bullseye"></i> <span id="team-goal">加载中...</span></span>
+                        <span class="meta-item"><i class="fas fa-map-marker-alt"></i> <span id="team-location">加载中...</span></span>
+                    </div>
+                    <div class="team-tags" id="team-tags">
+                        <!-- 动态加载团队标签 -->
+                    </div>
+                </div>
+                <div class="team-stats">
+                    <div class="stat">
+                        <span class="value" id="member-count">0</span>
+                        <span class="label">成员</span>
+                    </div>
+                    <div class="stat">
+                        <span class="value" id="team-level">0</span>
+                        <span class="label">等级</span>
+                    </div>
+                    <div class="stat">
+                        <span class="value" id="team-reputation">0</span>
+                        <span class="label">积分</span>
+                    </div>
+                    <div class="stat">
+                        <span class="value" id="team-activity">0%</span>
+                        <span class="label">活跃度</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 选项卡 -->
+            <div class="team-tabs">
+                <button class="tab-btn active" data-tab="members">成员列表</button>
+                <button class="tab-btn" data-tab="hierarchy">组织架构</button>
+                <button class="tab-btn" data-tab="activities">团队动态</button>
+                <button class="tab-btn" id="team-settings-btn" data-tab="settings">团队设置</button>
+            </div>
+
+            <div class="tab-content">
+                <!-- 成员列表 -->
+                <div class="tab-pane active" id="members-tab">
+                    <div class="members-header">
+                        <div class="search-box">
+                            <input type="text" placeholder="搜索成员..." id="member-search" />
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="filter-options">
+                            <select id="role-filter">
+                                <option value="all">所有职位</option>
+                                <option value="leader">管理层</option>
+                                <option value="core">核心成员</option>
+                                <option value="member">普通成员</option>
+                                <option value="trial">试用期</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="members-list" id="members-list">
+                        <!-- 动态加载成员列表 -->
+                    </div>
+                </div>
+
+                <!-- 层级结构 -->
+                <div class="tab-pane" id="hierarchy-tab">
+                    <div class="hierarchy-chart" id="hierarchy-chart">
+                        <!-- orgchart.js将在此处动态生成图表 -->
+                    </div>
+                </div>
+
+                <!-- 团队动态 -->
+                <div class="tab-pane" id="activities-tab">
+                    <div class="activities-feed" id="activities-feed">
+                        <!-- 动态加载团队动态 -->
+                    </div>
+                </div>
+
+                <!-- 团队设置 -->
+                <div class="tab-pane" id="settings-tab">
+                    <div class="settings-form">
+                        <h3>团队设置</h3>
+                        <form id="team-settings-form">
+                            <div class="form-group">
+                                <label for="team-name">团队名称</label>
+                                <input type="text" id="team-name" value="总部" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="team-desc">团队描述</label>
+                                <textarea id="team-desc" rows="3">企业核心管理层，决策中心</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="team-join-method">加入方式</label>
+                                <select id="team-join-method">
+                                    <option value="open">自由加入</option>
+                                    <option value="approval">需要批准</option>
+                                    <option value="invite">仅限邀请</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="team-visible">团队可见性</label>
+                                <select id="team-visible">
+                                    <option value="public">全员可见</option>
+                                    <option value="private">仅团队成员可见</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="team-join-code">加入验证码</label>
+                                <input type="text" id="team-join-code" placeholder="设置加入团队的验证码，留空则不需要验证码">
+                                <div class="form-hint">设置验证码后，用户加入团队时需要输入正确的验证码才能加入</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="team-level-limit">等级限制</label>
+                                <input type="number" id="team-level-limit" min="0" max="15" placeholder="设置加入团队的最低等级，留空则无限制">
+                                <div class="form-hint">设置等级限制后，低于该等级的用户将无法加入团队（最高15级）</div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">保存设置</button>
+                                <button type="button" class="btn btn-danger" id="disband-team-btn">解散团队</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 创建团队模态框 -->
+<div id="create-team-modal" class="modal">
+    <div class="modal-content create-team-modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-users"></i> 创建新团队</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="create-team-form" class="create-team-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="new-team-name">
+                            <i class="fas fa-signature"></i> 团队名称
+                        </label>
+                        <input type="text" id="new-team-name" required placeholder="输入团队名称">
+                        <div class="form-hint">2-20个字符，支持中英文、数字和下划线</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-team-type">
+                            <i class="fas fa-tag"></i> 团队类型
+                        </label>
+                        <div class="select-wrapper">
+                            <select id="new-team-type">
+                                <option value="department">部门</option>
+                                <option value="project">项目组</option>
+                                <option value="taskforce">特别任务组</option>
+                                <option value="committee">委员会</option>
+                            </select>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="new-team-desc">
+                            <i class="fas fa-align-left"></i> 团队描述
+                        </label>
+                        <textarea id="new-team-desc" rows="3" placeholder="简要描述团队职责和目标"></textarea>
+                        <div class="form-hint">描述将帮助成员了解团队的目标和职责</div>
+                    </div>
+
+                    <!-- 修改前 -->
+                    <div class="form-group">
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="visibility" value="public" checked>
+                                <span class="radio-checkmark"></span>
+                                <div class="radio-content">
+                                    <div class="radio-title">公开</div>
+                                    <div class="radio-desc">所有成员可见</div>
+                                </div>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="visibility" value="private">
+                                <span class="radio-checkmark"></span>
+                                <div class="radio-content">
+                                    <div class="radio-title">私有</div>
+                                    <div class="radio-desc">仅受邀成员可见</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="color-picker">
+                            <div class="color-option" data-color="#3f51b5" style="background-color: #3f51b5"></div>
+                            <div class="color-option" data-color="#ff4081" style="background-color: #ff4081"></div>
+                            <div class="color-option" data-color="#4caf50" style="background-color: #4caf50"></div>
+                            <div class="color-option" data-color="#ff9800" style="background-color: #ff9800"></div>
+                            <div class="color-option" data-color="#9c27b0" style="background-color: #9c27b0"></div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-plus-circle"></i> 创建团队
+                    </button>
+                    <button type="button" class="btn btn-outline modal-cancel">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 加入团队模态框 -->
+<div id="join-team-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-handshake"></i> 加入团队</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="search-box">
+                <input type="text" placeholder="搜索可加入的团队..." id="team-search">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="joinable-teams-list">
+                <div class="joinable-team-item">
+                    <div class="team-info">
+                        <h4>移动开发组</h4>
+                        <p>专注于iOS和Android应用开发</p>
+                        <div class="team-meta">
+                            <span><i class="fas fa-users"></i> 8人</span>
+                            <span><i class="fas fa-star"></i> 等级7</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-primary join-team-btn" data-team-id="mobile">申请加入</button>
+                </div>
+                <div class="joinable-team-item">
+                    <div class="team-info">
+                        <h4>用户体验设计组</h4>
+                        <p>负责产品界面和交互设计</p>
+                        <div class="team-meta">
+                            <span><i class="fas fa-users"></i> 5人</span>
+                            <span><i class="fas fa-star"></i> 等级6</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-primary join-team-btn" data-team-id="ux">申请加入</button>
+                </div>
+                <div class="joinable-team-item">
+                    <div class="team-info">
+                        <h4>DevOps团队</h4>
+                        <p>负责持续集成和部署流程</p>
+                        <div class="team-meta">
+                            <span><i class="fas fa-users"></i> 4人</span>
+                            <span><i class="fas fa-star"></i> 等级8</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-primary join-team-btn" data-team-id="devops">申请加入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 统一脚本 -->
+<script type="module" src="../../api-config.js"></script>
+<script type="module" src="../../toast.js"></script>
+<script type="module" src="../main.js"></script>
+<script type="module" src="./team-management-center.js"></script>
+</body>
+</html>

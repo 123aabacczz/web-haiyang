@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通知中心 - 知识协作平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../main.css?v=20261028">
+    <link rel="stylesheet" href="notifications.css?v=20261028">
+    <script src="../theme.js?v=20261028"></script>
+</head>
+<body>
+<!-- 导航栏 -->
+<header>
+  <div class="container">
+    <div class="navbar">
+      <div class="logo">
+        <i class="fas fa-brain"></i>
+        <span>知识协作平台</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="../main.html" class="nav-link active" aria-current="page">
+          <i class="fas fa-home"></i> 返回主页
+        </a>
+
+        <!-- 协作中心下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            协作中心 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../task-center/task-center.html" class="nav-link">任务中心</a>
+            <a href="../schedule-center/schedule-center.html" class="nav-link">日程中心</a>
+            <a href="../team-management/team-management.html" class="nav-link">成员中心</a>
+          </div>
+        </div>
+
+        <!-- 知识库下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            知识库 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../library/library.html" class="nav-link">资料库</a>
+            <a href="../learning-area/learning-area.html" class="nav-link">学习区</a>
+          </div>
+        </div>
+
+        <a href="../personal-center/personal-center.html" class="nav-link">个人中心</a>
+      </nav>
+
+      <!-- 右侧功能：搜索、主题、通知、用户信息 -->
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="搜索内容、文档或成员..." id="global-search" aria-label="全局搜索">
+        </div>
+
+        <div class="theme-toggle">
+          <input type="checkbox" id="theme-switch" hidden aria-label="切换主题">
+          <label for="theme-switch" class="toggle-label">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+            <span class="toggle-ball"></span>
+          </label>
+        </div>
+
+        <div class="notifications" id="notifications-btn" aria-label="通知">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </div>
+
+        <!-- 用户信息部分 -->
+        <div class="user-info" id="user-info-btn">
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+          <div class="user-details">
+            <div class="user-name" id="header-user-name">加载中...</div>
+            <div class="user-rank" id="header-user-rank">加载中...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 通知中心内容 -->
+<main class="main-content">
+    <div class="container">
+        <div class="notifications-page">
+            <div class="page-header">
+                <h1><i class="fas fa-bell"></i> 通知中心</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline" id="mark-all-read">
+                        <i class="fas fa-check-double"></i> 标记所有为已读
+                    </button>
+                    <button class="btn btn-primary" id="refresh-notifications">
+                        <i class="fas fa-sync"></i> 刷新
+                    </button>
+                </div>
+            </div>
+
+            <div class="notification-filters">
+                <div class="filter-tabs">
+                    <div class="filter-tab active" data-filter="all">全部通知</div>
+                    <div class="filter-tab" data-filter="system">系统通知</div>
+                    <div class="filter-tab" data-filter="task">任务通知</div>
+                    <div class="filter-tab" data-filter="comment">评论通知</div>
+                </div>
+
+                <div class="filter-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="show-read" checked>
+                        <span class="checkmark"></span>
+                        显示已读通知
+                    </label>
+                </div>
+            </div>
+
+            <div class="notifications-list" id="notifications-list">
+                <!-- 通知项将由JavaScript动态生成 -->
+            </div>
+
+            <div class="load-more" id="load-more">
+                <button class="btn btn-outline">加载更多</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script type="module" src="notifications.js"></script>
+</body>
+</html>

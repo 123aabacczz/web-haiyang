@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知识协作平台</title>
+  <meta name="description" content="高效的知识管理与团队协作平台">
+
+  <!-- 基础样式与图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css?v=20261028">
+  <script src="theme.js?v=20261028"></script>
+
+  <!-- 第三方库 -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.6/dayjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.6/plugin/relativeTime.min.js"></script>
+
+  <!-- 备用 CDN 检测 -->
+  <script>
+    window.addEventListener('load', () => {
+      const loadBackup = (name, mainUrl, backupUrl) => {
+        if (!window[name]) {
+          const el = document.createElement('script');
+          el.src = backupUrl;
+          document.head.appendChild(el);
+        }
+      };
+      loadBackup('FullCalendar', '', 'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js');
+      loadBackup('dayjs', '', 'https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.6/dayjs.min.js');
+      loadBackup('Chart', '', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js');
+    });
+  </script>
+</head>
+
+<body>
+<!-- 将原来的硬编码用户ID改为动态设置 -->
+<input type="hidden" id="current-user-id" value="">
+<header>
+  <div class="container">
+    <div class="navbar">
+      <div class="logo">
+        <i class="fas fa-brain"></i>
+        <span>知识协作平台</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#default-home" class="nav-link active" aria-current="page">工作台</a>
+
+        <!-- 协作中心下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            协作中心 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="task-center/task-center.html" class="nav-link">任务中心</a>
+            <a href="schedule-center/schedule-center.html" class="nav-link">日程中心</a>
+            <a href="team-management/team-management.html" class="nav-link">成员中心</a>
+          </div>
+        </div>
+
+        <!-- 知识库下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            知识库 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="library/library.html" class="nav-link">资料库</a>
+            <a href="learning-area/learning-area.html" class="nav-link">学习区</a>
+          </div>
+        </div>
+
+        <a href="personal-center/personal-center.html" class="nav-link">个人中心</a>
+      </nav>
+
+      <!-- 右侧功能：搜索、主题、通知、用户信息 -->
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="搜索内容、文档或成员..." id="global-search" aria-label="全局搜索">
+        </div>
+
+        <div class="theme-toggle">
+          <input type="checkbox" id="theme-switch" hidden aria-label="切换主题">
+          <label for="theme-switch" class="toggle-label">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+            <span class="toggle-ball"></span>
+          </label>
+        </div>
+
+        <div class="notifications" id="notifications-btn" aria-label="通知">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </div>
+
+        <!-- 修改位置：main.html 中的用户信息部分 -->
+        <div class="user-info" id="user-info-btn">
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+          <div class="user-details">
+            <div class="user-name" id="header-user-name">加载中...</div>
+            <div class="user-rank" id="header-user-rank">加载中...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 主内容区：默认主页（快速创建 + 快速访问 + 统计卡片） -->
+<main class="main-content">
+  <div class="container">
+    <!-- 默认主页内容 -->
+    <div id="default-home" class="module-content active">
+      <!-- 欢迎面板 + 统计 -->
+      <!-- 替换欢迎卡片 + 统计卡片区域 -->
+      <div class="dashboard-grid" style="display: flex; flex-wrap: wrap; gap: 1.5rem;">
+
+        <!-- 欢迎卡片：缩小宽度 -->
+        <div class="welcome-card" style="flex: 1 1 400px; min-width: 300px;">
+          <h2>早上好！</h2>
+          <p>今天是2025年9月1日，星期一。您今天有2个会议，3条未读公告。</p>
+          <div class="section-actions">
+            <div class="dropdown">
+              <button class="btn btn-primary" id="quick-create-btn">
+                <i class="fas fa-plus"></i> 快速创建
+              </button>
+              <div class="dropdown-menu" id="quick-create-menu">
+                <button class="dropdown-item" data-action="new-doc"><i class="fas fa-file-alt"></i>新建文档</button>
+                <button class="dropdown-item" data-action="new-project"><i class="fas fa-folder-plus"></i>新建项目</button>
+                <button class="dropdown-item" data-action="invite-member"><i class="fas fa-user-plus"></i>邀请成员</button>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item" data-action="generate-report"><i class="fas fa-chart-line"></i>生成报告</button>
+              </div>
+            </div>
+            <button class="btn btn-outline" id="view-schedule-btn" style="color: white; border-color: rgba(255,255,255,0.3);">
+              <i class="fas fa-calendar"></i> 查看日程
+            </button>
+          </div>
+        </div>
+
+        <!-- 统计卡片：并行展示 -->
+        <div class="stats-card" id="stats-card" style="flex: 1 1 500px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+          <div class="stat-item">
+            <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+            <span>未完成文档</span>
+            <span class="value" id="stat-documents">-</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+            <span>进行项目</span>
+            <span class="value" id="stat-projects">-</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
+            <span>成员变动</span>
+            <span class="value" id="stat-members">-</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+            <span>待办任务</span>
+            <span class="value" id="stat-tasks">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 即将召开的会议 -->
+      <div class="dashboard-grid">
+        <div class="upcoming-meetings info-card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-calendar-alt"></i> 即将召开的会议</div>
+            <a href="meetings/meetings.html" class="view-all">查看全部 <i class="fas fa-chevron-right"></i></a>
+          </div>
+          <div class="scroll-list" id="upcoming-meetings">
+            <!-- 动态加载 -->
+          </div>
+        </div>
+
+        <div class="recent-announcements info-card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-bullhorn"></i> 最新公告</div>
+            <a href="announcements/announcements.html" class="view-all">查看全部 <i class="fas fa-chevron-right"></i></a>
+          </div>
+          <div class="scroll-list" id="recent-announcements">
+            <!-- 动态加载 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 快速访问 -->
+      <div class="dashboard-grid">
+        <div class="quick-access">
+          <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-rocket"></i> 快速访问</h2>
+          </div>
+          <div class="quick-items-container">
+            <div class="quick-item" data-target="library">
+              <div class="quick-icon"><i class="fas fa-file-alt"></i></div>
+              <div class="quick-content">
+                <div class="quick-title">项目文档</div>
+                <div class="quick-desc">最新项目资料和规范</div>
+              </div>
+            </div>
+
+            <div class="quick-item" data-target="member-center">
+              <div class="quick-icon"><i class="fas fa-users"></i></div>
+              <div class="quick-content">
+                <div class="quick-title">团队目录</div>
+                <div class="quick-desc">查找团队成员和信息</div>
+              </div>
+            </div>
+
+            <div class="quick-item" data-target="data-reports">
+              <div class="quick-icon"><i class="fas fa-chart-line"></i></div>
+              <div class="quick-content">
+                <div class="quick-title">数据报告</div>
+                <div class="quick-desc">查看项目数据和分析</div>
+              </div>
+            </div>
+
+            <div class="quick-item" data-target="settings">
+              <div class="quick-icon"><i class="fas fa-cog"></i></div>
+              <div class="quick-content">
+                <div class="quick-title">设置</div>
+                <div class="quick-desc">管理账户和偏好设置</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- 模态框 -->
+<!-- 通知弹窗（铃铛点击） -->
+<div class="modal" id="notifications-modal">
+  <div class="modal-content notifications-popup">
+    <div class="modal-header">
+      <h3><i class="fas fa-bell"></i> 最新通知</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- 空状态 -->
+      <div id="notifications-empty" class="notifications-empty">
+        <i class="fas fa-bell-slash"></i>
+        <p>暂无未读通知</p>
+      </div>
+
+      <!-- 列表 -->
+      <ul id="notifications-pop-list" class="notifications-list">
+        <!-- JS 动态渲染 -->
+      </ul>
+    </div>
+
+    <div class="modal-footer">
+      <button id="mark-all-read-btn" class="btn btn-outline btn-sm">
+        <i class="fas fa-check-double"></i> 全部已读
+      </button>
+      <a href="notifications/notifications.html" class="btn btn-primary btn-sm">
+        <i class="fas fa-external-link-alt"></i> 查看全部
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 用户详情 & 等级体系 -->
+<div class="modal" id="user-modal">
+  <div class="modal-content user-modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-user-circle"></i> 个人档案</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="user-card">
+        <div class="avatar-lg">
+          <i class="fas fa-user"></i>
+        </div>
+
+        <div class="user-meta">
+          <div class="name" id="profile-modal-name">加载中...</div>
+          <div class="title" id="profile-modal-title">加载中...</div>
+          <div class="level-badge" id="profile-modal-level">Lv.0</div>
+        </div>
+      </div>
+
+      <!-- 经验条 -->
+      <div class="exp-bar-container">
+        <div class="exp-label">
+          <span>当前经验：<b id="profile-modal-exp">0</b></span>
+          <span>升级所需：<b id="profile-modal-next-exp">0</b></span>
+        </div>
+        <div class="exp-bar">
+          <div class="exp-fill" id="profile-modal-exp-fill" style="width: 0%"></div>
+        </div>
+        <div class="exp-percent" id="profile-modal-exp-percent">0%</div>
+      </div>
+
+      <!-- 等级体系 -->
+      <div class="level-info">
+        <h4>等级体系</h4>
+        <ul class="level-list" id="profile-level-list">
+          <li data-level="1"><span class="badge">Lv.1</span> 初级助手 | 0-300</li>
+          <li data-level="2"><span class="badge">Lv.2</span> 研究员 | 301-600</li>
+          <li data-level="3"><span class="badge">Lv.3</span> 中级研究员 | 601-900</li>
+          <li data-level="6"><span class="badge">Lv.6</span> 高级研究员 | 1201-1500</li>
+          <li data-level="7"><span class="badge">Lv.7</span> 资深研究员 | 1501-2000</li>
+        </ul>
+      </div>
+
+      <!-- 试炼任务 -->
+      <div class="trial-task">
+        <h4>升级试炼</h4>
+        <div class="task-item">
+          <i class="fas fa-trophy"></i>
+          <span>完成「季度报告」并获团队评分 ≥ 90 分</span>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="showToast('任务已接取！', 'success')">
+          <i class="fas fa-check-circle"></i> 接取任务
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="search-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>搜索</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="search-input-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="搜索内容、文档或成员..." class="search-modal-input">
+      </div>
+      <div class="search-results">
+        <div class="search-section">
+          <h4>最近搜索</h4>
+          <div class="search-tags">
+            <span class="search-tag">项目文档</span>
+            <span class="search-tag">季度报告</span>
+            <span class="search-tag">团队会议</span>
+          </div>
+        </div>
+        <div class="search-section">
+          <h4>推荐</h4>
+          <div class="search-result-item">
+            <div class="result-icon">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="result-content">
+              <div class="result-title">产品需求文档</div>
+              <div class="result-desc">最近更新：2小时前</div>
+            </div>
+          </div>
+          <div class="search-result-item">
+            <div class="result-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="result-content">
+              <div class="result-title">研发团队成员</div>
+              <div class="result-desc">12名成员</div>
+            </div>
+          </div>
+          <div class="search-result-item">
+            <div class="result-icon">
+              <i class="fas fa-calendar"></i>
+            </div>
+            <div class="result-content">
+              <div class="result-title">项目进度会议</div>
+              <div class="result-desc">明天 10:00-11:30</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 修改位置：main.html 中的 #modal-new-doc -->
+<div class="modal" id="modal-new-doc">
+  <div class="modal-content sm">
+    <div class="modal-header">
+      <h3><i class="fas fa-file-alt"></i> 新建文档</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <label class="form-label">文档标题</label>
+      <input type="text" id="doc-title" class="form-input" placeholder="请输入标题" required>
+
+      <div class="form-row">
+        <div style="flex: 1;">
+          <label class="form-label mt">选择模板</label>
+          <select id="doc-template" class="form-input" required>
+            <option value="">请选择模板</option>
+            <option value="blank">空白文档</option>
+            <option value="req">需求文档</option>
+            <option value="prd">PRD</option>
+            <option value="api">API 文档</option>
+          </select>
+        </div>
+        <div style="flex: 1; margin-left: 10px;">
+          <label class="form-label mt">项目ID</label>
+          <input type="number" id="doc-project-id" class="form-input" placeholder="可选">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div style="flex: 1;">
+          <label class="form-label mt">分类</label>
+          <select id="doc-category" class="form-input" required>
+            <option value="">请选择分类</option>
+            <option value="design">设计文档</option>
+            <option value="requirement">需求文档</option>
+            <option value="technical">技术文档</option>
+            <option value="report">报告</option>
+          </select>
+        </div>
+        <div style="flex: 1; margin-left: 10px;">
+          <label class="form-label mt">语言</label>
+          <select id="doc-language" class="form-input">
+            <option value="zh-CN">中文</option>
+            <option value="en-US">英文</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="form-label mt">描述</label>
+      <textarea id="doc-description" class="form-input" rows="2" placeholder="文档简要描述"></textarea>
+
+      <label class="form-label mt">标签</label>
+      <input type="text" id="doc-tags" class="form-input" placeholder="用逗号分隔多个标签">
+
+      <label class="form-label mt">版本</label>
+      <input type="text" id="doc-version" class="form-input" placeholder="例如: v1.0.0" value="v1.0.0">
+
+      <label class="form-label mt">原始文件名</label>
+      <input type="text" id="doc-original-filename" class="form-input" placeholder="上传文件的原始名称">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm modal-close-btn">取消</button>
+      <button class="btn btn-primary btn-sm" id="confirm-new-doc">立即创建</button>
+    </div>
+  </div>
+</div>
+
+<!-- 修改位置：main.html 中的 #modal-new-project -->
+<div class="modal" id="modal-new-project">
+  <div class="modal-content sm">
+    <div class="modal-header">
+      <h3><i class="fas fa-folder-plus"></i> 新建项目</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <label class="form-label">项目名称</label>
+      <input type="text" id="project-name" class="form-input" placeholder="例如：2025 官网改版" required>
+
+      <div class="form-row">
+        <div style="flex: 1;">
+          <label class="form-label mt">项目类型</label>
+          <select id="project-type" class="form-input" required>
+            <option value="">请选择类型</option>
+            <option value="research">科研类</option>
+            <option value="product">产品类</option>
+            <option value="market">市场类</option>
+          </select>
+        </div>
+        <div style="flex: 1; margin-left: 10px;">
+          <label class="form-label mt">初始状态</label>
+          <select id="project-status" class="form-input" required>
+            <option value="planning">规划中</option>
+            <option value="in_progress">进行中</option>
+            <option value="on_hold">已暂停</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm modal-close-btn">取消</button>
+      <button class="btn btn-primary btn-sm" id="confirm-new-project">创建项目</button>
+    </div>
+  </div>
+</div>
+
+<!-- 修改位置：main.html 中的 #modal-invite-member -->
+<div class="modal" id="modal-invite-member">
+  <div class="modal-content sm">
+    <div class="modal-header">
+      <h3><i class="fas fa-user-plus"></i> 邀请成员</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <label class="form-label">邮箱或手机号（批量请用逗号分隔）</label>
+      <textarea id="invite-input" class="form-input" rows="3" placeholder="user@example.com, 13800138000" required></textarea>
+
+      <div class="form-row">
+        <div style="flex: 1;">
+          <label class="form-label mt">分配角色</label>
+          <select id="invite-role" class="form-input" required>
+            <option value="member">普通成员</option>
+            <option value="admin">管理员</option>
+            <option value="viewer">仅查看</option>
+          </select>
+        </div>
+        <div style="flex: 1; margin-left: 10px;">
+          <label class="form-label mt">有效期(天)</label>
+          <input type="number" id="invite-expiry" class="form-input" value="7" min="1" max="30">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm modal-close-btn">取消</button>
+      <button class="btn btn-primary btn-sm" id="confirm-invite">发送邀请</button>
+    </div>
+  </div>
+</div>
+
+<!-- 修改位置：main.html 中的 #modal-generate-report -->
+<div class="modal" id="modal-generate-report">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="fas fa-chart-line"></i> 生成报告</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <label class="form-label">报告标题</label>
+      <input type="text" id="report-title" class="form-input" placeholder="请输入报告标题" required>
+
+      <label class="form-label mt">报告类型</label>
+      <select id="report-type" class="form-input" required>
+        <option value="weekly">周报</option>
+        <option value="monthly">月报</option>
+        <option value="project">项目总结</option>
+        <option value="custom">自定义</option>
+      </select>
+
+      <label class="form-label mt">时间范围</label>
+      <div class="form-row">
+        <input type="date" id="report-start" class="form-input" required>
+        <span style="margin:0 6px;line-height:36px">至</span>
+        <input type="date" id="report-end" class="form-input" required>
+      </div>
+
+      <label class="form-label mt">内容描述</label>
+      <textarea id="report-description" class="form-input" rows="3" placeholder="报告主要内容描述"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm modal-close-btn">取消</button>
+      <button class="btn btn-primary btn-sm" id="confirm-generate">生成 PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- 全局 Toast 容器 -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- 浮动快速操作按钮 -->
+<div class="floating-actions">
+  <button class="fab btn-primary" id="main-fab" aria-label="快速操作">
+    <i class="fas fa-plus"></i>
+  </button>
+  <div class="fab-actions">
+    <button class="fab" data-action="new-doc"><i class="fas fa-file"></i><span class="fab-tooltip">新建文档</span></button>
+    <button class="fab" data-action="new-task"><i class="fas fa-tasks"></i><span class="fab-tooltip">新建任务</span></button>
+    <button class="fab" data-action="new-meeting"><i class="fas fa-calendar"></i><span class="fab-tooltip">安排会议</span></button>
+  </div>
+</div>
+
+<!-- 统一脚本入口 -->
+<script type="module" src="main.js?v=20261027"></script>
+</body>
+</html>

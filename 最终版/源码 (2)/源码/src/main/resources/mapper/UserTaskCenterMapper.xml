@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserTaskCenterMapper">
+    <resultMap id="UserTaskCenterMap" type="com.example.demo.model.UserTaskCenter">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="points" column="points"/>
+        <result property="acceptedTasks" column="accepted_tasks"/>
+        <result property="completedTasks" column="completed_tasks"/>
+        <result property="todayPoints" column="today_points"/>
+        <result property="level" column="level"/>
+        <result property="experience" column="experience"/>
+        <result property="nextLevelExperience" column="next_level_experience"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+    
+    <select id="findByUserId" resultMap="UserTaskCenterMap">
+        SELECT * FROM user_task_center WHERE user_id = #{userId}
+    </select>
+    
+    <insert id="insert" parameterType="com.example.demo.model.UserTaskCenter">
+        INSERT INTO user_task_center (
+            user_id, points, accepted_tasks, completed_tasks, today_points, 
+            level, experience, next_level_experience
+        ) VALUES (
+            #{userId}, #{points}, #{acceptedTasks}, #{completedTasks}, #{todayPoints}, 
+            #{level}, #{experience}, #{nextLevelExperience}
+        )
+    </insert>
+    
+    <update id="update" parameterType="com.example.demo.model.UserTaskCenter">
+        UPDATE user_task_center SET
+            points = #{points},
+            accepted_tasks = #{acceptedTasks},
+            completed_tasks = #{completedTasks},
+            today_points = #{todayPoints},
+            level = #{level},
+            experience = #{experience},
+            next_level_experience = #{nextLevelExperience}
+        WHERE user_id = #{userId}
+    </update>
+    
+    <update id="updatePoints">
+        UPDATE user_task_center SET
+            points = #{points},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+    
+    <update id="updateTodayPoints">
+        UPDATE user_task_center SET
+            today_points = #{todayPoints},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+    
+    <update id="updateTaskStats">
+        UPDATE user_task_center SET
+            accepted_tasks = #{acceptedTasks},
+            completed_tasks = #{completedTasks},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+    
+    <update id="updateLevelStats">
+        UPDATE user_task_center SET
+            level = #{level},
+            experience = #{experience},
+            next_level_experience = #{nextLevelExperience},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+</mapper>

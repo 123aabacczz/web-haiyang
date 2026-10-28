@@ -1,0 +1,110 @@
+/* ========== 设计令牌 ========== */
+:root {
+  --primary-color:#3b82f6;
+  --success-color:#10b981;
+  --warning-color:#f59e0b;
+  --danger-color :#ef4444;
+  --text-color:#111827;
+  --text-light:#6b7280;
+  --bg-color:#ffffff;
+  --card-bg:#ffffff;
+  --border-color:#e5e7eb;
+  --gray-color:#9ca3af;
+  --input-bg: #f7fafc;
+  --radius:8px;
+  --transition:all .2s ease;
+  --shadow:0 1px 2px 0 rgb(0 0 0 / .05);
+  --shadow-lg:0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+}
+
+/* 夜间模式 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-color:#f3f4f6;
+    --text-light:#9ca3af;
+    --bg-color:#111827;
+    --card-bg:#1f2937;
+    --border-color:#374151;
+  }
+}
+
+/* ========== 全局重置 ========== */
+*,
+*::before,
+*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--font-sans);
+  background:var(--bg-color);
+  color:var(--text-color);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+button{
+  font-family:inherit;
+  cursor:pointer;
+  border:none;
+  outline:none;
+}
+input,select,textarea{
+  font-family:inherit;
+  font-size:100%;
+}
+a{color:var(--primary-color);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ========== 通用组件 ========== */
+.container{max-width:1200px;margin:0 auto;padding:1rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.25rem;
+  padding:.4rem .75rem;
+  border-radius:var(--radius);
+  font-size:.875rem;
+  transition:var(--transition);
+}
+.btn-primary{background:var(--primary-color);color:#fff}
+.btn-outline{
+  background:transparent;
+  border:1px solid var(--border-color);
+  color:var(--text-color);
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-sm{padding:.25rem .5rem;font-size:.75rem}
+
+/* ========== 骨架屏 ========== */
+.skeleton-container{display:grid;gap:1rem}
+.skeleton{background:var(--border-color);border-radius:var(--radius);animation:shimmer 1.5s infinite linear}
+@keyframes shimmer{
+  0%{background-position:-200px 0}
+  100%{background-position:calc(200px + 100%) 0}
+}
+.skeleton{height:80px;background:linear-gradient(90deg,var(--border-color) 25%,var(--card-bg) 50%,var(--border-color) 75%);background-size:200px 100%}
+/* 添加到theme.css中 */
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-light);
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/* 添加到settings.css中 */
+.device-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--input-bg);
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}

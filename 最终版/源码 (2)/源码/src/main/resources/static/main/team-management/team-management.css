@@ -1,0 +1,1283 @@
+/* 基础样式 */
+:root {
+  --primary: #3f51b5;
+  --primary-dark: #303f9f;
+  --primary-light: #c5cae9;
+  --accent: #ff4081;
+  --text-primary: #212121;
+  --text-secondary: #757575;
+  --divider: #e0e0e0;
+  --background: #f5f7fa;
+  --card-background: #ffffff;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --danger: #f44336;
+  --info: #2196f3;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: var(--text-primary);
+  background-color: var(--background);
+  line-height: 1.6;
+  padding: 2rem;
+}
+
+#team-management {
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 4rem);
+}
+
+/* 模块头部 */
+.module-header {
+  background: linear-gradient(120deg, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.module-subtitle {
+  font-size: 1rem;
+  font-weight: 300;
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+}
+
+.module-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* 按钮样式 */
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+}
+
+.btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #d32f2f;
+}
+
+/* 主容器 */
+.team-management-container {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  align-items: flex-start;
+}
+
+/* 左侧边栏 */
+.org-sidebar {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: var(--card-background);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.org-hierarchy, .my-teams {
+  padding: 1.2rem;
+  border-bottom: 1px solid var(--divider);
+}
+
+.org-hierarchy:last-child, .my-teams:last-child {
+  border-bottom: none;
+}
+
+.org-hierarchy h3, .my-teams h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-primary);
+}
+
+.org-tree, .team-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.org-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.org-children {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-left: 1.5rem;
+  border-left: 1px solid var(--divider);
+  margin-left: 0.75rem;
+}
+
+.org-item, .team-item {
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.org-item:hover, .team-item:hover {
+  background-color: rgba(63, 81, 181, 0.05);
+}
+
+.org-item.active, .team-item.active {
+  background-color: rgba(63, 81, 181, 0.1);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.org-badge {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  margin-left: auto;
+}
+
+.org-badge:not([class*="bg-"]) {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.team-role {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.team-member-count {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+/* 右侧主内容 */
+.team-main-content {
+  flex: 1;
+  background-color: var(--card-background);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.team-header {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--divider);
+}
+
+.team-info h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.team-info p {
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+}
+
+.team-meta-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background-color: rgba(63, 81, 181, 0.05);
+  padding: 0.3rem 0.8rem;
+  border-radius: 16px;
+}
+
+.team-tags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.team-tag {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.team-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat .value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat .label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* 选项卡 */
+.team-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--divider);
+  padding: 0 1.5rem;
+}
+
+.tab-btn {
+  padding: 1rem 1.2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--text-secondary);
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: var(--primary);
+}
+
+.tab-btn.active {
+  color: var(--primary);
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary);
+  border-radius: 3px 3px 0 0;
+}
+
+/* 选项卡内容 */
+.tab-content {
+  padding: 1.5rem;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 成员列表 */
+.members-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.search-box {
+  position: relative;
+  width: 250px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.7rem 1rem 0.7rem 2.5rem;
+  border: 1px solid var(--divider);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+}
+
+.search-box i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.filter-options select {
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--divider);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+.members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.member-card {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: var(--card-background);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.member-card:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.member-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+.member-info {
+  flex: 1;
+}
+
+.member-name {
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.member-role {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.member-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.member-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* 组织架构图 */
+.org-chart {
+  padding: 1rem;
+}
+
+.org-node {
+  background-color: white;
+  border: 1px solid var(--divider);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0 auto 2rem;
+  width: 200px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 1;
+}
+
+.node-title {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.node-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.org-children {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  position: relative;
+  margin-top: 2rem;
+}
+
+.org-branch {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.org-branch::before {
+  content: '';
+  position: absolute;
+  top: -2rem;
+  left: 50%;
+  width: 2px;
+  height: 2rem;
+  background-color: var(--divider);
+}
+
+.org-children > .org-branch::after {
+  content: '';
+  position: absolute;
+  top: -2rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--divider);
+}
+
+.org-children > .org-branch:first-child::after {
+  left: 50%;
+}
+
+.org-children > .org-branch:last-child::after {
+  right: 50%;
+}
+
+.org-children > .org-branch:only-child::after {
+  display: none;
+}
+
+/* 团队动态 */
+.activities-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.activity-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-title {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.activity-desc {
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.activity-time {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* 设置表单 */
+.settings-form h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--divider);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+  body {
+    padding: 1rem;
+  }
+  
+  #team-management {
+    min-height: calc(100vh - 2rem);
+  }
+  
+  .team-management-container {
+    flex-direction: column;
+  }
+
+  .org-sidebar {
+    flex: 1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .team-header {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .team-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .members-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .member-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .member-info {
+    width: 100%;
+  }
+
+  .member-meta {
+    justify-content: center;
+  }
+
+  .org-children {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}
+
+/* 模态框样式 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background-color: var(--card-background);
+  margin: 5% auto;
+  padding: 0;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease;
+}
+
+.modal-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--divider);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-close {
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: var(--danger);
+}
+
+.modal-body {
+  padding: 1.5rem;
+  max-height: 60vh; /* 添加最大高度 */
+  overflow-y: auto; /* 添加垂直滚动 */
+}
+
+.joinable-teams-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.joinable-team-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: rgba(63, 81, 181, 0.05);
+  border: 1px solid var(--divider);
+}
+
+.joinable-team-item .team-info h4 {
+  margin-bottom: 0.3rem;
+  color: var(--text-primary);
+}
+
+.joinable-team-item .team-info p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.team-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.team-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 模态框表单样式 */
+.modal .form-group {
+  margin-bottom: 1.2rem;
+}
+
+.modal .form-actions {
+  margin-top: 1.5rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .modal-content {
+    margin: 10% auto;
+    width: 95%;
+  }
+
+  .joinable-team-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .joinable-team-item .join-team-btn {
+    align-self: flex-end;
+  }
+}
+/* 组织架构图响应式设计 */
+@media (max-width: 768px) {
+  .org-chart {
+    overflow-x: auto;
+  }
+
+  #hierarchy-chart {
+    min-width: 600px;
+  }
+}
+
+/* orgchart.js自定义样式 */
+.orgchart {
+  background: transparent;
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.orgchart .node {
+  width: 180px;
+  height: auto;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  border: 1px solid var(--divider);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  text-align: center;
+}
+
+.orgchart .node::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--primary);
+}
+
+.orgchart .node:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  z-index: 5;
+}
+
+.orgchart .node .title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.orgchart .node .content {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+/* 连接线样式 */
+.orgchart .hierarchy::before {
+  border-top: 1px solid var(--divider);
+}
+
+.orgchart .node:not(:only-child)::after {
+  background-color: var(--divider);
+}
+
+.orgchart>ul>li>ul li>.node::before {
+  background-color: var(--divider);
+}
+
+/* 垂直模式样式 */
+.orgchart .nodes.vertical::before {
+  background-color: var(--divider);
+}
+
+.orgchart .nodes.vertical .hierarchy::after,
+.orgchart .nodes.vertical .hierarchy::before {
+  border-color: var(--divider);
+}
+
+/* 动画效果 */
+.orgchart .node {
+  animation: fadeIn 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.orgchart .node:nth-child(1) { animation-delay: 0.1s; }
+.orgchart .node:nth-child(2) { animation-delay: 0.2s; }
+.orgchart .node:nth-child(3) { animation-delay: 0.3s; }
+.orgchart .node:nth-child(4) { animation-delay: 0.4s; }
+.orgchart .node:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 滚动条样式 */
+#hierarchy-tab {
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+#hierarchy-tab::-webkit-scrollbar {
+  width: 6px;
+}
+
+#hierarchy-tab::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 3px;
+}
+
+#hierarchy-tab::-webkit-scrollbar-thumb {
+  background: #ced4da;
+  border-radius: 3px;
+}
+
+#hierarchy-tab::-webkit-scrollbar-thumb:hover {
+  background: #adb5bd;
+}
+
+/* 创建团队模态框特定样式 */
+.create-team-modal {
+  max-width: 600px;
+}
+
+.create-team-form {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-grid .full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.form-hint {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 0.4rem;
+}
+
+.select-wrapper {
+  position: relative;
+}
+
+.select-wrapper select {
+  appearance: none;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--divider);
+  border-radius: 6px;
+  background-color: white;
+  font-size: 0.9rem;
+}
+
+.select-wrapper i {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-secondary);
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem;
+  border: 1px solid var(--divider);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.radio-option:hover {
+  border-color: var(--primary);
+  background-color: rgba(63, 81, 181, 0.03);
+}
+
+.radio-option input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.radio-checkmark {
+  position: relative;
+  height: 18px;
+  width: 18px;
+  background-color: white;
+  border: 2px solid var(--divider);
+  border-radius: 50%;
+  margin-right: 0.8rem;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.radio-option input:checked ~ .radio-checkmark {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.radio-option input:checked ~ .radio-checkmark::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+.radio-content {
+  flex: 1;
+}
+
+.radio-title {
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+.radio-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.color-picker {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.color-option {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+}
+
+.color-option.active {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary);
+}
+
+.btn-large {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .create-team-modal {
+    margin: 5% auto;
+    width: 95%;
+  }
+}
+
+/* ==================== 深色主题 ==================== */
+html[data-theme="dark"] {
+  --text-primary: #e5e7eb;
+  --text-secondary: #94a3b8;
+  --divider: #334155;
+  --background: #0f172a;
+  --card-background: #1e293b;
+  --primary-light: #2f3f66;
+}
+
+html[data-theme="dark"] body {
+  background-color: #0f172a;
+  color: #e5e7eb;
+}
+
+/* 卡片与面板 */
+html[data-theme="dark"] .org-sidebar,
+html[data-theme="dark"] .team-main-content,
+html[data-theme="dark"] .member-card,
+html[data-theme="dark"] .activity-item,
+html[data-theme="dark"] .org-node,
+html[data-theme="dark"] .orgchart,
+html[data-theme="dark"] .orgchart .node {
+  background-color: #1e293b;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark"] .orgchart table,
+html[data-theme="dark"] .orgchart .hierarchy {
+  background-color: transparent;
+}
+
+html[data-theme="dark"] .orgchart .edge {
+  background-color: #334155;
+  border-color: #334155;
+}
+
+html[data-theme="dark"] .orgchart {
+  background-image: none;
+}
+
+html[data-theme="dark"] .orgchart .node .content {
+  background-color: #0f172a;
+  color: #e5e7eb;
+  border-color: #334155;
+}
+
+html[data-theme="dark"] .orgchart .node:hover {
+  background-color: #273449;
+}
+
+html[data-theme="dark"] .member-card:hover {
+  border-color: #6366f1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+/* 侧边栏交互 */
+html[data-theme="dark"] .org-item:hover,
+html[data-theme="dark"] .team-item:hover {
+  background-color: rgba(99, 102, 241, 0.15);
+}
+
+html[data-theme="dark"] .org-item.active,
+html[data-theme="dark"] .team-item.active {
+  background-color: rgba(99, 102, 241, 0.22);
+  color: #a5b4fc;
+}
+
+html[data-theme="dark"] .meta-item {
+  background-color: rgba(99, 102, 241, 0.15);
+}
+
+html[data-theme="dark"] .joinable-team-item {
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+html[data-theme="dark"] .radio-option:hover {
+  background-color: rgba(99, 102, 241, 0.12);
+}
+
+/* 强调色文字 */
+html[data-theme="dark"] .stat .value,
+html[data-theme="dark"] .tab-btn.active {
+  color: #a5b4fc;
+}
+
+html[data-theme="dark"] .team-role,
+html[data-theme="dark"] .team-tag,
+html[data-theme="dark"] .org-badge:not([class*="bg-"]) {
+  background-color: rgba(99, 102, 241, 0.22);
+  color: #a5b4fc;
+}
+
+html[data-theme="dark"] .member-avatar,
+html[data-theme="dark"] .activity-icon {
+  background-color: rgba(99, 102, 241, 0.22);
+  color: #a5b4fc;
+}
+
+/* 表单与输入框 */
+html[data-theme="dark"] .search-box input,
+html[data-theme="dark"] .filter-options select,
+html[data-theme="dark"] .form-group input,
+html[data-theme="dark"] .form-group textarea,
+html[data-theme="dark"] .form-group select,
+html[data-theme="dark"] .select-wrapper select {
+  background-color: #0f172a;
+  border-color: #334155;
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .search-box input::placeholder,
+html[data-theme="dark"] .form-group input::placeholder,
+html[data-theme="dark"] .form-group textarea::placeholder {
+  color: #64748b;
+}
+
+html[data-theme="dark"] .form-group select option,
+html[data-theme="dark"] .filter-options select option,
+html[data-theme="dark"] .select-wrapper select option {
+  background-color: #0f172a;
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .radio-checkmark {
+  background-color: #0f172a;
+  border-color: #334155;
+}
+
+html[data-theme="dark"] .color-option.active {
+  box-shadow: 0 0 0 2px #1e293b, 0 0 0 4px var(--primary);
+}
+
+/* 滚动条 */
+html[data-theme="dark"] #hierarchy-tab::-webkit-scrollbar-track {
+  background: #273449;
+}
+
+html[data-theme="dark"] #hierarchy-tab::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+html[data-theme="dark"] #hierarchy-tab::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}

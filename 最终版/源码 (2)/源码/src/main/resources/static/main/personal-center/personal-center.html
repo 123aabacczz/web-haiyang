@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>个人中心 - 知识协作平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="../main.css?v=20261028"/>
+    <link rel="stylesheet" href="personal-center.css?v=20261028"/>
+    <script src="../theme.js?v=20261028"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<!-- 导航栏 -->
+<header>
+  <div class="container">
+    <div class="navbar">
+      <div class="logo">
+        <i class="fas fa-brain"></i>
+        <span>知识协作平台</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="../main.html" class="nav-link active" aria-current="page">
+          <i class="fas fa-home"></i> 返回主页
+        </a>
+
+        <!-- 协作中心下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            协作中心 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../task-center/task-center.html" class="nav-link">任务中心</a>
+            <a href="../schedule-center/schedule-center.html" class="nav-link">日程中心</a>
+            <a href="../team-management/team-management.html" class="nav-link">成员中心</a>
+          </div>
+        </div>
+
+        <!-- 知识库下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            知识库 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../library/library.html" class="nav-link">资料库</a>
+            <a href="../learning-area/learning-area.html" class="nav-link">学习区</a>
+          </div>
+        </div>
+
+        <a href="../personal-center/personal-center.html" class="nav-link">个人中心</a>
+      </nav>
+
+      <!-- 右侧功能：搜索、主题、通知、用户信息 -->
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="搜索内容、文档或成员..." id="global-search" aria-label="全局搜索">
+        </div>
+
+        <div class="theme-toggle">
+          <input type="checkbox" id="theme-switch" hidden aria-label="切换主题">
+          <label for="theme-switch" class="toggle-label">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+            <span class="toggle-ball"></span>
+          </label>
+        </div>
+
+        <div class="notifications" id="notifications-btn" aria-label="通知">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </div>
+
+        <!-- 用户信息部分 -->
+        <div class="user-info" id="user-info-btn">
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+          <div class="user-details">
+            <div class="user-name" id="header-user-name">加载中...</div>
+            <div class="user-rank" id="header-user-rank">加载中...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="personal-center" class="module-content active">
+    <!-- 顶部个人信息卡片 -->
+    <div class="profile-header">
+        <!-- 头像与等级 -->
+        <div class="profile-avatar-container">
+            <div class="profile-avatar">
+                <div class="avatar-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="level-badge" id="avatar-level-badge" data-level="0">Lv.0</div>
+            </div>
+            <div class="xp-progress">
+                <div class="xp-progress-bar">
+                    <div class="xp-progress-fill" id="xp-progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="xp-progress-text" id="xp-progress-text">0 / 0 XP</div>
+            </div>
+        </div>
+
+        <!-- 基本信息 -->
+        <div class="profile-info">
+            <!-- 修改个人中心页面的用户信息部分 -->
+            <h2 class="profile-name" id="profile-name">
+                <span id="user-name">加载中...</span> <i class="fas fa-badge-check verified"></i>
+            </h2>
+            <p class="profile-title" id="profile-title">加载中...</p>
+            <div class="level-badge" id="level-badge" data-level="0">Lv.0</div>
+            <div class="profile-tags"></div>
+            <p class="profile-bio" id="profile-bio">暂无简介</p>
+        </div>
+
+        <!-- 统计数字 -->
+        <div class="profile-stats">
+            <div class="profile-stat">
+                <div class="profile-stat-value" id="stat-projects">-</div>
+                <div class="profile-stat-label">项目</div>
+            </div>
+            <div class="profile-stat">
+                <div class="profile-stat-value" id="stat-documents">-</div>
+                <div class="profile-stat-label">文档</div>
+            </div>
+            <div class="profile-stat">
+                <div class="profile-stat-value" id="stat-skills">-</div>
+                <div class="profile-stat-label">技能</div>
+            </div>
+            <div class="profile-stat">
+                <div class="profile-stat-value" id="stat-years">-</div>
+                <div class="profile-stat-label">年</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 本周概览 -->
+    <div class="activity-overview">
+        <div class="overview-card">
+            <div class="overview-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="overview-content">
+                <div class="overview-value" id="overview-documents">-</div>
+                <div class="overview-label">本周创建文档</div>
+            </div>
+            <div class="overview-trend positive"><i class="fas fa-arrow-up"></i> 25%</div>
+        </div>
+
+        <div class="overview-card">
+            <div class="overview-icon"><i class="fas fa-tasks"></i></div>
+            <div class="overview-content">
+                <div class="overview-value" id="overview-tasks">-</div>
+                <div class="overview-label">进行中任务</div>
+            </div>
+            <div class="overview-trend negative"><i class="fas fa-arrow-down"></i> 10%</div>
+        </div>
+
+        <div class="overview-card">
+            <div class="overview-icon"><i class="fas fa-comments"></i></div>
+            <div class="overview-content">
+                <div class="overview-value" id="overview-comments">-</div>
+                <div class="overview-label">本周评论</div>
+            </div>
+            <div class="overview-trend positive"><i class="fas fa-arrow-up"></i> 15%</div>
+        </div>
+
+        <div class="overview-card">
+            <div class="overview-icon"><i class="fas fa-clock"></i></div>
+            <div class="overview-content">
+                <div class="overview-value" id="overview-study-time">-</div>
+                <div class="overview-label">学习时长</div>
+            </div>
+            <div class="overview-trend positive"><i class="fas fa-arrow-up"></i> 30%</div>
+        </div>
+    </div>
+
+    <!-- 内容区 -->
+    <div class="profile-content-grid">
+        <!-- 左侧 -->
+        <div class="profile-left-column">
+            <!-- 技能图谱 -->
+            <div class="module-card">
+                <div class="module-card-header">
+                    <h3 class="module-card-title"><i class="fas fa-star"></i> 技能图谱</h3>
+                    <!-- 技能图谱模块 -->
+                    <button class="btn btn-sm btn-outline view-all-btn" id="viewFullSkills">完整图谱</button>
+                </div>
+                <div class="module-card-content">
+                    <div class="skills-container">
+                        <div class="skills-radar-container">
+                            <canvas id="skills-radar-chart" height="250"></canvas>
+                        </div>
+
+                        <div class="skills-summary">
+                            <div class="summary-card">
+                                <div class="summary-icon"><i class="fas fa-trophy"></i></div>
+                                <div class="summary-content">
+                                    <div class="summary-value">前端开发</div>
+                                    <div class="summary-label">核心专长领域</div>
+                                </div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-icon"><i class="fas fa-bolt"></i></div>
+                                <div class="summary-content">
+                                    <div class="summary-value">87.5%</div>
+                                    <div class="summary-label">平均掌握程度</div>
+                                </div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-icon"><i class="fas fa-arrow-up"></i></div>
+                                <div class="summary-content">
+                                    <div class="summary-value">+12%</div>
+                                    <div class="summary-label">季度成长</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skills-list">
+                        <div class="skill-item">
+                            <span class="skill-name">React</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" style="width: 85%"></div>
+                            </div>
+                            <span class="skill-percent">85%</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">JavaScript</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" style="width: 90%"></div>
+                            </div>
+                            <span class="skill-percent">90%</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">TypeScript</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" style="width: 80%"></div>
+                            </div>
+                            <span class="skill-percent">80%</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">UI/UX 设计</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" style="width: 70%"></div>
+                            </div>
+                            <span class="skill-percent">70%</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Node.js</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" style="width: 75%"></div>
+                            </div>
+                            <span class="skill-percent">75%</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Vue.js</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" style="width: 65%"></div>
+                            </div>
+                            <span class="skill-percent">65%</span>
+                        </div>
+                    </div>
+
+                    <div class="learning-suggestions">
+                        <h4><i class="fas fa-lightbulb"></i> 学习建议</h4>
+                        <div class="suggestion-list">
+                            <div class="suggestion-item">
+                                <i class="fas fa-paint-brush"></i>
+                                <span>加强 UI/UX 设计能力，建议学习 Figma 高级课程</span>
+                            </div>
+                            <div class="suggestion-item">
+                                <i class="fas fa-code"></i>
+                                <span>Vue.js 掌握程度较低，建议完成 Vue 3 实战课程</span>
+                            </div>
+                            <div class="suggestion-item">
+                                <i class="fas fa-server"></i>
+                                <span>Node.js 可深入学习性能优化和微服务架构</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline">查看详细学习路径</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作历史 -->
+            <div class="module-card">
+                <div class="module-card-header">
+                    <h3 class="module-card-title"><i class="fas fa-history"></i> 最近活动</h3>
+                    <!-- 最近活动模块 -->
+                    <button class="btn btn-sm btn-outline view-all-btn" id="viewAllActivities">查看全部</button>
+                </div>
+                <div class="module-card-content">
+                    <div class="activity-timeline">
+                        <div class="activity-item">
+                            <div class="activity-icon completed"><i class="fas fa-file-alt"></i></div>
+                            <div class="activity-content">
+                                <div class="activity-title">创建了文档 "React 性能优化指南"</div>
+                                <div class="activity-desc">在项目文档库中添加了新文档</div>
+                                <div class="activity-time">2小时前</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon completed"><i class="fas fa-tasks"></i></div>
+                            <div class="activity-content">
+                                <div class="activity-title">完成了任务 "修复登录页面 BUG"</div>
+                                <div class="activity-desc">获得了 50 积分和 BUG 猎手徽章</div>
+                                <div class="activity-time">昨天 15:30</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon in-progress"><i class="fas fa-graduation-cap"></i></div>
+                            <div class="activity-content">
+                                <div class="activity-title">开始了新课程 "React 高级开发"</div>
+                                <div class="activity-desc">已完成第 5 课 / 共 12 课</div>
+                                <div class="activity-time">2 天前</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon completed"><i class="fas fa-users"></i></div>
+                            <div class="activity-content">
+                                <div class="activity-title">加入了团队 "符文编织者"</div>
+                                <div class="activity-desc">担任长老角色</div>
+                                <div class="activity-time">3 天前</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 我的项目 -->
+            <div class="module-card">
+                <div class="module-card-header">
+                    <h3 class="module-card-title"><i class="fas fa-folder"></i> 我的项目</h3>
+                    <div class="filter-buttons">
+                        <button class="btn btn-sm btn-outline active" data-filter="all">全部</button>
+                        <button class="btn btn-sm btn-outline" data-filter="active">进行中</button>
+                        <button class="btn btn-sm btn-outline" data-filter="completed">已完成</button>
+                    </div>
+
+                    <!-- 我的项目模块 -->
+                    <button class="btn btn-sm btn-outline view-all-btn" id="viewAllProjects">查看全部</button>
+                </div>
+                <div class="module-card-content">
+                    <div class="project-list">
+                        <div class="project-item">
+                            <div class="project-icon"><i class="fas fa-code"></i></div>
+                            <div class="project-info">
+                                <div class="project-name">项目管理系统</div>
+                                <div class="project-desc">企业内部项目协作平台</div>
+                                <div class="project-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 75%"></div>
+                                    </div>
+                                    <span class="progress-text">75%</span>
+                                </div>
+                            </div>
+                            <div class="project-meta">
+                                <span class="project-role">前端开发</span>
+                                <span class="project-deadline">截止: 2025-12-30</span>
+                            </div>
+                        </div>
+
+                        <div class="project-item">
+                            <div class="project-icon"><i class="fas fa-mobile-alt"></i></div>
+                            <div class="project-info">
+                                <div class="project-name">移动端适配优化</div>
+                                <div class="project-desc">提升移动端用户体验</div>
+                                <div class="project-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 30%"></div>
+                                    </div>
+                                    <span class="progress-text">30%</span>
+                                </div>
+                            </div>
+                            <div class="project-meta">
+                                <span class="project-role">技术负责人</span>
+                                <span class="project-deadline">截止: 2025-01-15</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧 -->
+        <div class="profile-right-column">
+            <!-- 成就与勋章 -->
+            <div class="module-card">
+                <div class="module-card-header">
+                    <h3 class="module-card-title"><i class="fas fa-trophy"></i> 成就与勋章</h3>
+
+                    <!-- 成就与勋章模块 -->
+                    <button class="btn btn-sm btn-outline view-all-btn" id="viewAllBadges">查看全部</button>
+                </div>
+                <div class="module-card-content">
+                    <div class="badges-grid">
+                        <div class="badge-item epic">
+                            <div class="badge-icon"><i class="fas fa-crown"></i></div>
+                            <div class="badge-info">
+                                <div class="badge-name">知识分享者</div>
+                                <div class="badge-desc">分享了 10 篇优质文档</div>
+                            </div>
+                        </div>
+                        <div class="badge-item rare">
+                            <div class="badge-icon"><i class="fas fa-bolt"></i></div>
+                            <div class="badge-info">
+                                <div class="badge-name">效率大师</div>
+                                <div class="badge-desc">连续 5 天提前完成任务</div>
+                            </div>
+                        </div>
+                        <div class="badge-item common">
+                            <div class="badge-icon"><i class="fas fa-book"></i></div>
+                            <div class="badge-info">
+                                <div class="badge-name">学习先锋</div>
+                                <div class="badge-desc">完成 3 门课程学习</div>
+                            </div>
+                        </div>
+                        <div class="badge-item legendary">
+                            <div class="badge-icon"><i class="fas fa-fire"></i></div>
+                            <div class="badge-info">
+                                <div class="badge-name">代码大师</div>
+                                <div class="badge-desc">提交超过 1000 次代码</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-meta">
+                        <span>已获得 12 个成就和 5 枚勋章</span>
+                        <span>最近获得：知识分享者 (3 天前)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 学习进度 -->
+            <div class="module-card">
+                <div class="module-card-header">
+                    <h3 class="module-card-title"><i class="fas fa-chart-line"></i> 学习进度</h3>
+                    <!-- 学习进度模块 -->
+                    <button class="btn btn-sm btn-outline" id="viewLearningReport">学习报告</button>
+                </div>
+                <div class="module-card-content">
+                    <div class="learning-stats">
+                        <div class="learning-stat">
+                            <div class="learning-stat-value">24h</div>
+                            <div class="learning-stat-label">本月学习</div>
+                        </div>
+                        <div class="learning-stat">
+                            <div class="learning-stat-value">3</div>
+                            <div class="learning-stat-label">完成课程</div>
+                        </div>
+                        <div class="learning-stat">
+                            <div class="learning-stat-value">80%</div>
+                            <div class="learning-stat-label">目标完成</div>
+                        </div>
+                    </div>
+                    <div class="chart-container" style="height: 200px; margin: 15px 0;">
+                        <canvas id="learning-chart"></canvas>
+                    </div>
+                    <div class="learning-details">
+                        <div class="learning-item">
+                            <span class="learning-label">学习小时数</span>
+                            <span class="learning-value">24 小时</span>
+                        </div>
+                        <div class="learning-item">
+                            <span class="learning-label">目标</span>
+                            <span class="learning-value">30 小时 / 月</span>
+                        </div>
+                        <div class="learning-item">
+                            <span class="learning-label">完成度</span>
+                            <span class="learning-value">80%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 账户设置快速入口 -->
+            <div class="module-card">
+                <div class="module-card-header">
+                    <h3 class="module-card-title"><i class="fas fa-cog"></i> 账户设置</h3>
+                </div>
+                <div class="module-card-content">
+                    <div class="settings-quick-links">
+                        <a href="#" class="settings-link" id="editProfileLink">
+                            <div class="settings-link-icon"><i class="fas fa-user-edit"></i></div>
+                            <div class="settings-link-content">
+                                <span class="settings-link-title">编辑个人信息</span>
+                                <span class="settings-link-desc">更新您的个人资料</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="settings-link" id="changePasswordLink">
+                            <div class="settings-link-icon"><i class="fas fa-lock"></i></div>
+                            <div class="settings-link-content">
+                                <span class="settings-link-title">修改密码</span>
+                                <span class="settings-link-desc">增强账户安全性</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="settings-link" id="notificationSettingsLink">
+                            <div class="settings-link-icon"><i class="fas fa-bell"></i></div>
+                            <div class="settings-link-content">
+                                <span class="settings-link-title">通知设置</span>
+                                <span class="settings-link-desc">管理消息提醒</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="settings-link" id="privacySettingsLink">
+                            <div class="settings-link-icon"><i class="fas fa-shield-alt"></i></div>
+                            <div class="settings-link-content">
+                                <span class="settings-link-title">隐私设置</span>
+                                <span class="settings-link-desc">控制信息可见性</span>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                    <div class="item-meta">
+                        <span>上次修改密码：3 个月前</span>
+                        <span>邮箱验证：已验证 · 手机绑定：已绑定</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑个人资料模态框 -->
+<div id="editProfileModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>编辑个人资料</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="profileName">姓名</label>
+                    <input type="text" id="profileName" value="">
+                </div>
+                <div class="form-group">
+                    <label for="profileTitle">职位</label>
+                    <input type="text" id="profileTitle" value="">
+                </div>
+                <div class="form-group">
+                    <label for="profileBio">个人简介</label>
+                    <textarea id="profileBio" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>技能标签</label>
+                    <div class="tags-input">
+                        <input type="text" id="tagInput" placeholder="输入技能后按回车">
+                        <div class="tags-container"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="cancelEdit">取消</button>
+            <button type="button" class="btn" id="saveProfile">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- 统一脚本 -->
+<script type="module" src="personal-center.js?v=20261027"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserPointsMapper">
+    <resultMap id="UserPointsMap" type="com.example.demo.model.UserPoints">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="points" column="points"/>
+        <result property="todayPoints" column="today_points"/>
+        <result property="totalPoints" column="total_points"/>
+        <result property="ranking" column="ranking"/>
+        <result property="lastUpdated" column="last_updated"/>
+    </resultMap>
+    
+    <select id="findAll" resultMap="UserPointsMap">
+        SELECT up.*, u.username 
+        FROM user_points up
+        LEFT JOIN users u ON up.user_id = u.id
+        ORDER BY up.total_points DESC
+    </select>
+    
+    <select id="findByUserId" resultMap="UserPointsMap">
+        SELECT up.*, u.username 
+        FROM user_points up
+        LEFT JOIN users u ON up.user_id = u.id
+        WHERE up.user_id = #{userId}
+    </select>
+    
+    <insert id="insert" parameterType="com.example.demo.model.UserPoints">
+        INSERT INTO user_points (
+            user_id, points, today_points, total_points, ranking
+        ) VALUES (
+            #{userId}, #{points}, #{todayPoints}, #{totalPoints}, #{ranking}
+        )
+    </insert>
+    
+    <update id="update" parameterType="com.example.demo.model.UserPoints">
+        UPDATE user_points SET
+            points = #{points},
+            today_points = #{todayPoints},
+            total_points = #{totalPoints},
+            ranking = #{ranking}
+        WHERE user_id = #{userId}
+    </update>
+    
+    <update id="updatePoints">
+        UPDATE user_points SET
+            points = #{points},
+            last_updated = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+    
+    <update id="updateTodayPoints">
+        UPDATE user_points SET
+            today_points = #{todayPoints},
+            last_updated = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+    
+    <update id="updateTotalPoints">
+        UPDATE user_points SET
+            total_points = #{totalPoints},
+            last_updated = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+    
+    <update id="updateRanking">
+        UPDATE user_points SET
+            ranking = #{ranking},
+            last_updated = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+</mapper>

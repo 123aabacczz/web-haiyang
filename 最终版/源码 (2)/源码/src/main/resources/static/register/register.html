@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星空海洋注册</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../background/background.css">
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+<div id="background-container">
+    <canvas id="galaxy-canvas"></canvas>
+    <canvas id="ocean-canvas"></canvas>
+</div>
+<div class="decoration decoration-1"></div>
+<div class="decoration decoration-2"></div>
+<div class="control-panel">
+    <h3><i class="fas fa-sliders-h"></i> 背景效果控制</h3>
+    <div class="control-group">
+        <label for="particle-density"><i class="fas fa-star"></i> 粒子密度</label>
+        <div class="slider-container">
+            <input type="range" id="particle-density" min="150" max="500" value="300">
+            <span id="particle-density-value">300</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label for="bubble-frequency"><i class="fas fa-water"></i> 气泡频率</label>
+        <div class="slider-container">
+            <input type="range" id="bubble-frequency" min="3" max="15" value="8">
+            <span id="bubble-frequency-value">8</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label for="beam-count"><i class="fas fa-bolt"></i> 光束数量</label>
+        <div class="slider-container">
+            <input type="range" id="beam-count" min="8" max="25" value="15">
+            <span id="beam-count-value">15</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label for="seabed-ripple-frequency"><i class="fas fa-wave-square"></i> 海底涟漪频率</label>
+        <div class="slider-container">
+            <input type="range" id="seabed-ripple-frequency" min="0.05" max="0.25" step="0.01" value="0.12">
+            <span id="seabed-ripple-frequency-value">0.12</span>
+        </div>
+    </div>
+    <button id="theme-toggle"><i class="fas fa-palette"></i> 切换银河主题</button>
+</div>
+
+<div class="register-container">
+    <div class="register-header">
+        <h2><i class="fas fa-user-astronaut"></i> 创建您的账户</h2>
+        <p>加入我们的星空海洋之旅</p>
+    </div>
+
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="username"><i class="fas fa-user"></i> 用户名</label>
+            <div class="input-group">
+                <span class="input-icon"><i class="fas fa-user"></i></span>
+                <input type="text" id="username" name="username" required placeholder="输入您的用户名">
+            </div>
+            <span class="error" id="usernameError"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="email"><i class="fas fa-envelope"></i> 邮箱</label>
+            <div class="input-group">
+                <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                <input type="email" id="email" name="email" required placeholder="输入您的邮箱">
+            </div>
+            <span class="error" id="emailError"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="password"><i class="fas fa-lock"></i> 密码</label>
+            <div class="input-group">
+                <span class="input-icon"><i class="fas fa-lock"></i></span>
+                <input type="password" id="password" name="password" required placeholder="输入您的密码">
+                <span class="password-toggle"><i class="fas fa-eye"></i></span>
+            </div>
+            <span class="error" id="passwordError"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword"><i class="fas fa-lock"></i> 确认密码</label>
+            <div class="input-group">
+                <span class="input-icon"><i class="fas fa-lock"></i></span>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="再次输入密码">
+                <span class="password-toggle"><i class="fas fa-eye"></i></span>
+            </div>
+            <span class="error" id="confirmPasswordError"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="secret"><i class="fas fa-key"></i> 安全暗号</label>
+            <div class="input-group">
+                <span class="input-icon"><i class="fas fa-key"></i></span>
+                <input type="text" id="secret" name="secret" required placeholder="用于找回密码的安全暗号">
+            </div>
+        </div>
+
+        <button type="submit" class="register-btn">
+            <i class="fas fa-rocket"></i> 立即注册
+        </button>
+
+        <div class="link-btns">
+            <a href="../login/login.html"><i class="fas fa-sign-in-alt"></i> 已有账号？去登录</a>
+            <a href="../forgot/forgot.html"><i class="fas fa-question-circle"></i> 忘记密码</a>
+        </div>
+
+        <!-- 用户操作引导 -->
+        <div style="font-size:11px;color:#d5b8ff;margin-top:8px;line-height:1.4">
+            <i class="fas fa-info-circle"></i> 提示：两次密码需完全一致，安全暗号用于找回密码，请牢记！<br>
+            <span id="regHint" style="display:none;color:#ff8b8b">请检查红色提示并修正后再提交。</span>
+        </div>
+    </form>
+</div>
+
+<script src="../background/background.js"></script>
+<script type="module" src="register.js"></script>
+<script type="module" src="../api-config.js"></script>
+</body>
+</html>

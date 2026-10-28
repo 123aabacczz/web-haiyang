@@ -1,0 +1,358 @@
+/* 通用 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f2f4f8;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+#background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1a2980, #26d0ce);
+}
+
+/* 主容器 */
+.box {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 35px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+h2 {
+    margin-bottom: 28px;
+    text-align: center;
+    color: #2c3e50;
+    font-size: 28px;
+    font-weight: 600;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(to right, #1a2980, #26d0ce);
+    border-radius: 2px;
+}
+
+/* 表单元素 */
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    font-size: 16px;
+    z-index: 2;
+}
+
+.input-with-icon .password-toggle {
+    left: auto;
+    right: 14px;
+    cursor: pointer;
+}
+
+input {
+    width: 100%;
+    padding: 14px 16px 14px 44px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: #f9fafb;
+    position: relative;
+    z-index: 1;
+}
+
+input:focus {
+    border-color: #1a73e8;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+    background: #fff;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
+    background: linear-gradient(to right, #1a2980, #26d0ce);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(26, 115, 232, 0.35);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(30deg);
+    transition: all 0.6s ease;
+}
+
+button:hover::after {
+    transform: rotate(30deg) translate(10%, 10%);
+}
+
+/* 提示文字 */
+.error {
+    display: block;
+    font-size: 13px;
+    color: #e53935;
+    margin-top: 6px;
+    padding-left: 8px;
+}
+
+.success {
+    margin-top: 16px;
+    text-align: center;
+    color: #43a047;
+    font-weight: 500;
+    padding: 12px;
+    background: rgba(67, 160, 71, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 统一跳转按钮美化 */
+.link-btns {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.link-btns a {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all .3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* 主按钮配色 */
+.link-btns a:nth-child(1){
+    background: linear-gradient(to right, #1a2980, #26d0ce);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(26, 115, 232, 0.2);
+}
+.link-btns a:nth-child(1):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(26, 115, 232, 0.3);
+}
+
+/* 次按钮配色 */
+.link-btns a:nth-child(2){
+    background: transparent;
+    color: #1a73e8;
+    border: 1px solid #1a73e8;
+}
+.link-btns a:nth-child(2):hover {
+    background: rgba(26, 115, 232, 0.05);
+}
+
+/* 控制面板美化 */
+.control-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 280px;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.control-panel:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.control-panel h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #2c3e50;
+    margin-bottom: 18px;
+    font-size: 18px;
+}
+
+.control-panel h3 i {
+    color: #1a73e8;
+}
+
+.control-group {
+    margin-bottom: 18px;
+}
+
+.control-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.slider-container input[type="range"] {
+    flex: 1;
+    padding: 0;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    -webkit-appearance: none;
+}
+
+.slider-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #1a73e8;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.slider-container span {
+    min-width: 40px;
+    text-align: center;
+    background: #f0f4f8;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a73e8;
+}
+
+#theme-toggle {
+    width: 100%;
+    margin-top: 10px;
+    background: #2c3e50;
+    font-size: 14px;
+    padding: 10px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+        align-items: flex-start;
+    }
+
+    .box {
+        margin-top: 60px;
+        max-width: 100%;
+        padding: 30px 25px;
+    }
+
+    .control-panel {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .link-btns {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+}

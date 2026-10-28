@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会议详情 - 知识协作平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../main.css?v=20261028">
+    <link rel="stylesheet" href="meeting.css?v=20261028">
+    <script src="../theme.js?v=20261028"></script>
+    <!-- 添加模块导入 -->
+    <script type="module" src="../../api-config.js"></script>
+    <script type="module" src="../../toast.js"></script>
+</head>
+<body>
+<!-- 导航栏 -->
+<header>
+  <div class="container">
+    <div class="navbar">
+      <div class="logo">
+        <i class="fas fa-brain"></i>
+        <span>知识协作平台</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="../main.html" class="nav-link active" aria-current="page">
+          <i class="fas fa-home"></i> 返回主页
+        </a>
+
+        <!-- 协作中心下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            协作中心 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../task-center/task-center.html" class="nav-link">任务中心</a>
+            <a href="../schedule-center/schedule-center.html" class="nav-link">日程中心</a>
+            <a href="../team-management/team-management.html" class="nav-link">成员中心</a>
+          </div>
+        </div>
+
+        <!-- 知识库下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            知识库 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../library/library.html" class="nav-link">资料库</a>
+            <a href="../learning-area/learning-area.html" class="nav-link">学习区</a>
+          </div>
+        </div>
+
+        <a href="../personal-center/personal-center.html" class="nav-link">个人中心</a>
+      </nav>
+
+      <!-- 右侧功能：搜索、主题、通知、用户信息 -->
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="搜索内容、文档或成员..." id="global-search" aria-label="全局搜索">
+        </div>
+
+        <div class="theme-toggle">
+          <input type="checkbox" id="theme-switch" hidden aria-label="切换主题">
+          <label for="theme-switch" class="toggle-label">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+            <span class="toggle-ball"></span>
+          </label>
+        </div>
+
+        <div class="notifications" id="notifications-btn" aria-label="通知">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </div>
+
+        <!-- 用户信息部分 -->
+        <div class="user-info" id="user-info-btn">
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+          <div class="user-details">
+            <div class="user-name" id="header-user-name">加载中...</div>
+            <div class="user-rank" id="header-user-rank">加载中...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 主要内容区 -->
+<main class="main-content">
+    <div class="container">
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <h1 class="page-title">会议中心</h1>
+            <p class="page-subtitle">管理您的所有会议安排和参与记录</p>
+        </div>
+
+        <!-- 筛选栏 -->
+        <div class="filters">
+            <div class="filter-group">
+                <span class="filter-label">时间范围:</span>
+                <select class="filter-select" id="time-range-filter">
+                    <option value="all">全部会议</option>
+                    <option value="today">今天</option>
+                    <option value="week">本周</option>
+                    <option value="month" selected>本月</option>
+                    <option value="next-month">下月</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">会议类型:</span>
+                <select class="filter-select" id="type-filter">
+                    <option value="all">全部类型</option>
+                    <option value="internal">内部会议</option>
+                    <option value="client">客户会议</option>
+                    <option value="review">项目评审</option>
+                    <option value="regular">团队例会</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">状态:</span>
+                <select class="filter-select" id="status-filter">
+                    <option value="all">全部状态</option>
+                    <option value="upcoming">待开始</option>
+                    <option value="ongoing">进行中</option>
+                    <option value="completed">已结束</option>
+                    <option value="cancelled">已取消</option>
+                </select>
+            </div>
+
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="搜索会议..." id="meeting-search">
+                <button class="clear-search" id="clear-meeting-search" style="display: none;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 会议列表 - 清除所有静态会议卡片 -->
+        <div class="content-grid">
+            <!-- 会议卡片将由JavaScript动态生成 -->
+        </div>
+
+        <!-- 分页 - 改为动态生成 -->
+        <div class="pagination" id="pagination-container">
+            <!-- 分页将由JavaScript动态生成 -->
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <p>© 2023 知识协作平台 - 所有权利保留</p>
+    </div>
+</footer>
+<script type="module" src="meeting.js"></script>
+</body>
+</html>

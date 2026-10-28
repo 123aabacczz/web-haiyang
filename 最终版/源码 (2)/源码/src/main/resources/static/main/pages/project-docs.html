@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>项目文档 - 知识协作平台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="project-docs.css" />
+    <style>
+        /* 添加筛选栏样式 */
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+
+        .filter-select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            color: var(--text-color);
+            min-width: 120px;
+        }
+
+        .sort-select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        /* 调整卡片样式以显示更多信息 */
+        .resource-card {
+            display: flex;
+            flex-direction: column;
+            padding: 1.2rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--card-bg);
+            transition: var(--transition);
+            height: auto;
+        }
+
+        .resource-card-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .resource-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .resource-info {
+            flex-grow: 1;
+        }
+
+        .resource-info h3 {
+            margin: 0 0 0.4rem;
+            font-size: 1.1rem;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .resource-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin: 0.5rem 0;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .resource-description {
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-color);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .resource-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.8rem 0;
+        }
+
+        .tag {
+            padding: 0.2rem 0.6rem;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+
+        .resource-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .resource-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* 空状态样式 */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+
+            .filter-select, .sort-select {
+                width: 100%;
+            }
+
+            .resource-card-header {
+                flex-direction: column;
+            }
+
+            .resource-icon {
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<header id="header-nav"></header>
+
+<main class="main-content">
+    <div class="container">
+        <div class="module-header">
+            <h2 class="module-title"><i class="fas fa-file-alt"></i> 项目文档</h2>
+            <p class="module-subtitle">最新项目资料和规范文档</p>
+        </div>
+
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="doc-search" placeholder="搜索文档名称、描述或标签..." />
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label for="category-filter">分类:</label>
+                <select id="category-filter" class="filter-select">
+                    <option value="">所有分类</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="type-filter">类型:</label>
+                <select id="type-filter" class="filter-select">
+                    <option value="">所有类型</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="sort-select">排序:</label>
+                <select id="sort-select" class="sort-select">
+                    <option value="uploadTime">上传时间</option>
+                    <option value="downloadCount">下载量</option>
+                    <option value="viewCount">浏览量</option>
+                    <option value="name">名称</option>
+                </select>
+            </div>
+
+            <button id="reset-filters" class="btn btn-outline btn-sm">重置筛选</button>
+        </div>
+
+        <div class="module-grid" id="doc-grid">
+            <!-- 骨架屏 -->
+            <div class="skeleton-container">
+                <div class="skeleton-item"><div class="skeleton" style="width:100%;height:180px;border-radius:var(--radius)"></div></div>
+                <div class="skeleton-item"><div class="skeleton" style="width:100%;height:180px;border-radius:var(--radius)"></div></div>
+                <div class="skeleton-item"><div class="skeleton" style="width:100%;height:180px;border-radius:var(--radius)"></div></div>
+            </div>
+        </div>
+
+        <div class="pagination" id="pagination-container"></div>
+    </div>
+</main>
+
+<script type="module" src="project-docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.UserMapper">
+
+    <resultMap id="UserMap" type="com.example.demo.model.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="email" property="email"/>
+        <result column="password" property="password"/>
+        <result column="secret" property="secret"/>
+        <result column="status" property="status"/>
+        <result column="registration_date" property="registrationDate"/>
+        <result column="role" property="role"/>
+        <result column="admin_level" property="adminLevel"/>
+        <result column="userLevel" property="userLevel"/>
+    </resultMap>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO users (username, email, password, secret, status, registration_date, role)
+        VALUES (#{username}, #{email}, #{password}, #{secret}, #{status}, NOW(), #{role})
+        ON DUPLICATE KEY UPDATE id=id
+    </insert>
+
+    <!-- 修改 selectByUsername 查询 -->
+    <select id="selectByUsername" resultMap="UserMap">
+        SELECT
+        u.*,
+        COALESCE(ul.user_level, 1) as userLevel
+        FROM users u
+        LEFT JOIN user_levels ul ON u.id = ul.user_id
+        WHERE u.username = #{username}
+    </select>
+
+    <update id="updatePasswordById">
+        UPDATE users SET password = #{encrypt} WHERE id = #{userId}
+    </update>
+
+    <!-- 修改 selectByEmail 查询 -->
+    <select id="selectByEmail" resultMap="UserMap">
+        SELECT
+        u.*,
+        COALESCE(ul.user_level, 1) as userLevel
+        FROM users u
+        LEFT JOIN user_levels ul ON u.id = ul.user_id
+        WHERE u.email = #{email}
+    </select>
+
+    <select id="validateSecret" resultMap="UserMap">
+        SELECT
+        u.*,
+        COALESCE(ul.user_level, 1) as userLevel
+        FROM users u
+        LEFT JOIN user_levels ul ON u.id = ul.user_id
+        WHERE u.email = #{email} AND u.secret = #{secret}
+    </select>
+
+    <update id="updatePassword">
+        UPDATE users SET password = #{newPwd} WHERE email = #{email}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE users SET status = #{status} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteUserById">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
+
+    <select id="selectByStatus" resultMap="UserMap">
+        SELECT
+        u.*,
+        a.admin_level
+        FROM users u
+        LEFT JOIN admins a ON u.id = a.user_id
+        WHERE u.status = #{status}
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByStatus" resultType="long">
+        SELECT COUNT(*) FROM users WHERE status = #{status}
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*) FROM users
+        <where>
+            <if test="keyword != null and keyword != ''">
+                (username LIKE CONCAT('%', #{keyword}, '%')
+                OR email LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="countNewUsers" resultType="long">
+        SELECT COUNT(*) FROM users
+        WHERE registration_date &gt;= #{date}
+    </select>
+
+    <select id="countActiveUsers" resultType="long">
+        SELECT COUNT(DISTINCT user_id)
+        FROM activity_logs
+        WHERE action_time >= #{date}
+    </select>
+
+    <update id="updateUser">
+        UPDATE users
+        SET
+        username = #{username},
+        email = #{email},
+        role = #{role}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 添加用户等级相关的SQL -->
+    <insert id="insertUserLevel">
+        INSERT INTO user_levels (user_id, user_level)
+        VALUES (#{userId}, #{userLevel})
+    </insert>
+
+    <update id="updateUserLevel">
+        UPDATE user_levels SET user_level = #{userLevel}
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="selectUserLevelByUserId" resultType="java.lang.Integer">
+        SELECT user_level FROM user_levels WHERE user_id = #{userId}
+    </select>
+
+    <delete id="deleteUserLevelByUserId">
+        DELETE FROM user_levels WHERE user_id = #{userId}
+    </delete>
+
+    <!-- 修改现有的selectAll查询 -->
+    <select id="selectAll" resultType="com.example.demo.model.User">
+        SELECT
+        u.*,
+        COALESCE(ul.user_level, 1) as userLevel,
+        a.admin_level as adminLevel
+        FROM users u
+        LEFT JOIN user_levels ul ON u.id = ul.user_id
+        LEFT JOIN admins a ON u.id = a.user_id
+        WHERE 1=1
+        <if test="keyword != null and keyword != ''">
+            AND (u.username LIKE CONCAT('%', #{keyword}, '%')
+            OR u.email LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY u.id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 修改 selectById 查询 -->
+    <select id="selectById" resultType="com.example.demo.model.User">
+        SELECT
+        u.*,
+        COALESCE(ul.user_level, 1) as userLevel,
+        a.admin_level as adminLevel
+        FROM users u
+        LEFT JOIN user_levels ul ON u.id = ul.user_id
+        LEFT JOIN admins a ON u.id = a.user_id
+        WHERE u.id = #{id}
+    </select>
+
+</mapper>

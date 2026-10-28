@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>学习区 - 知识协作平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../main.css?v=20261028" />
+    <link rel="stylesheet" href="learning-area.css?v=20261028" />
+    <script src="../theme.js?v=20261028"></script>
+</head>
+
+<body>
+<!-- 导航栏 -->
+<header>
+  <div class="container">
+    <div class="navbar">
+      <div class="logo">
+        <i class="fas fa-brain"></i>
+        <span>知识协作平台</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="../main.html" class="nav-link" aria-current="page">
+          <i class="fas fa-home"></i> 返回主页
+        </a>
+
+        <!-- 协作中心下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            协作中心 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../task-center/task-center.html" class="nav-link">任务中心</a>
+            <a href="../schedule-center/schedule-center.html" class="nav-link">日程中心</a>
+            <a href="../team-management/team-management.html" class="nav-link">成员中心</a>
+          </div>
+        </div>
+
+        <!-- 知识库下拉 -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn">
+            知识库 <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="nav-dropdown-content">
+            <a href="../library/library.html" class="nav-link">资料库</a>
+            <a href="../learning-area/learning-area.html" class="nav-link active">学习区</a>
+          </div>
+        </div>
+
+        <a href="../personal-center/personal-center.html" class="nav-link">个人中心</a>
+      </nav>
+
+      <!-- 右侧功能：搜索、主题、通知、用户信息 -->
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="搜索内容、文档或成员..." id="global-search" aria-label="全局搜索">
+        </div>
+
+        <div class="theme-toggle">
+          <input type="checkbox" id="theme-switch" hidden aria-label="切换主题">
+          <label for="theme-switch" class="toggle-label">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+            <span class="toggle-ball"></span>
+          </label>
+        </div>
+
+        <div class="notifications" id="notifications-btn" aria-label="通知">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </div>
+
+        <!-- 用户信息部分 -->
+        <div class="user-info" id="user-info-btn">
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+          <div class="user-details">
+            <div class="user-name" id="header-user-name">加载中...</div>
+            <div class="user-rank" id="header-user-rank">加载中...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="learning-area" class="module-content active">
+    <!-- 页面头部 -->
+    <div class="module-header">
+        <h2 class="module-title">
+            <i class="fas fa-graduation-cap"></i> 学习中心
+        </h2>
+        <p class="module-subtitle">提升技能，拓展知识边界</p>
+    </div>
+
+    <!-- 学习中心概览 -->
+    <div class="learning-center-overview">
+        <!-- 合并的用户信息和学习统计容器 -->
+        <div class="user-stats-container">
+            <div class="user-info-section">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <h3 class="user-name">加载中...</h3>
+                    <p class="user-role">加载中...</p>
+                </div>
+            </div>
+            <div class="learning-stats-section">
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <span class="stat-number">24</span>
+                    <span class="stat-label">本月学时</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">完成课程</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-trophy"></i>
+                    <span class="stat-number">8</span>
+                    <span class="stat-label">获得徽章</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 视频上传区域 -->
+    <div class="video-upload-section">
+        <h3><i class="fas fa-upload"></i> 上传视频</h3>
+        <form id="video-upload-form" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="video-title">视频标题</label>
+                <input type="text" id="video-title" name="title" required placeholder="请输入视频标题">
+            </div>
+            <div class="form-group">
+                <label for="video-description">视频描述</label>
+                <textarea id="video-description" name="description" required placeholder="请输入视频描述"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="video-course">所属课程</label>
+                <select id="video-course" name="courseId" required>
+                    <option value="1">React 高级开发</option>
+                    <option value="2">数据库设计原理</option>
+                    <option value="3">数据分析与可视化</option>
+                    <option value="4">云计算基础</option>
+                    <option value="5">UI/UX 设计系统</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="video-file">选择视频文件</label>
+                <input type="file" id="video-file" name="file" accept="video/*" required>
+            </div>
+            <button type="submit" class="btn btn-primary">上传视频</button>
+        </form>
+    </div>
+
+    <!-- 课程卡片网格 -->
+    <div class="module-grid learning-grid">
+        <!-- 进行中的课程 -->
+        <div class="module-card course-card">
+            <div class="course-banner">
+                <i class="fab fa-react"></i>
+            </div>
+            <div class="module-card-header">
+                <h3 class="module-card-title">
+                    <i class="fas fa-code"></i> React 高级开发
+                </h3>
+                <span class="badge badge-primary">进行中</span>
+            </div>
+            <div class="module-card-content">
+                <p>深入学习 React Hooks、Context API 与性能优化技巧。</p>
+                <div class="course-progress">
+                    <div class="course-progress-bar" style="width: 65%"></div>
+                </div>
+                <div class="item-meta">
+                    <span>12 课时中的 8 课</span>
+                    <span>剩余 7 天</span>
+                </div>
+            </div>
+            <div class="comment-section">
+                <div class="comment-list">
+                    <div class="comment-item">
+                        <div class="comment-author">
+                            <span>李老师</span>
+                            <span class="comment-time">2小时前</span>
+                        </div>
+                        <div class="comment-text">最新一节课已更新，请及时学习。</div>
+                        <div class="comment-actions">
+                            <span class="comment-action">回复</span>
+                            <span class="comment-action">点赞 (3)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-form">
+                    <input type="text" class="comment-input" placeholder="添加评论..." />
+                    <button class="comment-submit">发送</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 已完成课程 -->
+        <div class="module-card course-card completed">
+            <div class="course-banner">
+                <i class="fas fa-database"></i>
+            </div>
+            <div class="module-card-header">
+                <h3 class="module-card-title">
+                    <i class="fas fa-database"></i> 数据库设计原理
+                </h3>
+                <span class="badge badge-success">已完成</span>
+            </div>
+            <div class="module-card-content">
+                <p>掌握关系型数据库设计原则与范式，提升数据建模能力。</p>
+                <div class="course-progress">
+                    <div class="course-progress-bar" style="width: 100%"></div>
+                </div>
+                <div class="item-meta">
+                    <span>10 课时中的 10 课</span>
+                    <span>已完成</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 未开始课程 -->
+        <div class="module-card course-card">
+            <div class="course-banner">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="module-card-header">
+                <h3 class="module-card-title">
+                    <i class="fas fa-chart-line"></i> 数据分析与可视化
+                </h3>
+                <span class="badge badge-warning">未开始</span>
+            </div>
+            <div class="module-card-content">
+                <p>使用 Python & ECharts 实现数据清洗、分析及交互式图表。</p>
+                <div class="course-progress">
+                    <div class="course-progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="item-meta">
+                    <span>15 课时中的 0 课</span>
+                    <span>尚未开始</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 云计算基础 -->
+        <div class="module-card course-card">
+            <div class="course-banner">
+                <i class="fas fa-cloud"></i>
+            </div>
+            <div class="module-card-header">
+                <h3 class="module-card-title">
+                    <i class="fas fa-cloud"></i> 云计算基础
+                </h3>
+                <span class="badge badge-primary">进行中</span>
+            </div>
+            <div class="module-card-content">
+                <p>了解云原生概念，掌握 AWS / 阿里云核心服务与最佳实践。</p>
+                <div class="course-progress">
+                    <div class="course-progress-bar" style="width: 30%"></div>
+                </div>
+                <div class="item-meta">
+                    <span>8 课时中的 3 课</span>
+                    <span>剩余 14 天</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新增课程示例 -->
+        <div class="module-card course-card">
+            <div class="course-banner">
+                <i class="fas fa-palette"></i>
+            </div>
+            <div class="module-card-header">
+                <h3 class="module-card-title">
+                    <i class="fas fa-palette"></i> UI/UX 设计系统
+                </h3>
+                <span class="badge badge-secondary">即将上线</span>
+            </div>
+            <div class="module-card-content">
+                <p>从 0 到 1 搭建企业级设计系统，包含组件、图标与 Token。</p>
+                <div class="course-progress">
+                    <div class="course-progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="item-meta">
+                    <span>12 课时</span>
+                    <span>敬请期待</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 视频列表 -->
+    <div class="video-list-section">
+        <h3><i class="fas fa-video"></i> 视频资源</h3>
+        <div class="video-grid" id="video-grid">
+            <!-- 视频卡片将通过 JavaScript 动态生成 -->
+        </div>
+    </div>
+
+    <!-- 视频播放模态框 -->
+    <div class="modal" id="video-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h4 id="modal-video-title"></h4>
+            <div class="video-player">
+                <video id="video-player" controls width="100%" height="400px"></video>
+            </div>
+            <p id="modal-video-description"></p>
+        </div>
+    </div>
+
+    <!-- 学习路径推荐 -->
+    <div class="learning-path">
+        <h3><i class="fas fa-route"></i> 推荐学习路径</h3>
+        <div class="path-list">
+            <div class="path-item">
+                <div class="path-icon"><i class="fas fa-laptop-code"></i></div>
+                <div class="path-info">
+                    <h4>前端全栈进阶</h4>
+                    <p>React → Node.js → 微前端 → DevOps</p>
+                    <span class="path-meta">预计 60 学时 · 5 门课程</span>
+                </div>
+                <button class="btn btn-outline btn-sm">开始学习</button>
+            </div>
+            <div class="path-item">
+                <div class="path-icon"><i class="fas fa-database"></i></div>
+                <div class="path-info">
+                    <h4>数据工程师路线</h4>
+                    <p>SQL → Python → Spark → BI 工具</p>
+                    <span class="path-meta">预计 80 学时 · 6 门课程</span>
+                </div>
+                <button class="btn btn-outline btn-sm">开始学习</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 统一脚本 -->
+<script type="module" src="learning-area.js"></script>
+</body>
+</html>

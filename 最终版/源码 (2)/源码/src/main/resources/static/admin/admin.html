@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理员后台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" onload="console.log('Chart.js 加载成功');" onerror="console.error('Chart.js 加载失败');"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- 全局背景 -->
+<div class="global-bg"></div>
+
+<!-- 加载指示器 -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-spinner"></div>
+</div>
+
+<aside class="sidebar">
+  <div class="logo-container">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <div class="logo-animation"></div>
+        <i class="fas fa-cogs"></i>
+      </div>
+      <span>AdminConsole</span>
+    </a>
+  </div>
+  <div class="nav-scroll-container">
+  <ul class="nav-menu">
+    <!-- 仪表盘单独显示 -->
+    <li><a href="#" class="nav-link active" data-target="dashboard"><i class="fas fa-tachometer-alt"></i><span>仪表盘</span></a></li>
+
+    <!-- 分隔线 -->
+    <li class="nav-divider"></li>
+
+    <!-- 核心管理部分 -->
+    <li class="nav-group-header">
+      <span>核心管理</span>
+      <i class="fas fa-chevron-down group-toggle" data-group="core-management"></i>
+    </li>
+    <li class="nav-group core-management" style="display: block;">
+      <ul>
+        <li><a href="#" class="nav-link" data-target="user-management"><i class="fas fa-users"></i><span>用户管理</span></a></li>
+        <li><a href="#" class="nav-link" data-target="permission-management"><i class="fas fa-lock"></i><span>权限管理</span></a></li>
+        <li><a href="#" class="nav-link" data-target="material-management"><i class="fas fa-archive"></i><span>资料管理</span></a></li>
+        <li><a href="#" class="nav-link" data-target="task-management"><i class="fas fa-tasks"></i><span>任务管理</span></a></li>
+        <li><a href="#" class="nav-link" data-target="announcement-management"><i class="fas fa-bullhorn"></i><span>公告管理</span></a></li>
+      </ul>
+    </li>
+
+    <!-- 分隔线 -->
+    <li class="nav-divider"></li>
+
+    <!-- 审核管理部分 -->
+    <li class="nav-group-header">
+      <span>审核管理</span>
+      <i class="fas fa-chevron-down group-toggle" data-group="review-management"></i>
+    </li>
+    <li class="nav-group review-management" style="display: block;">
+      <ul>
+        <li><a href="#" class="nav-link" data-target="material-review"><i class="fas fa-file-alt"></i><span>资料审核</span></a></li>
+        <li><a href="#" class="nav-link" data-target="registration-review"><i class="fas fa-user-plus"></i><span>注册审核</span></a></li>
+        <li><a href="#" class="nav-link" data-target="task-review"><i class="fas fa-clipboard-check"></i><span>任务审核</span></a></li>
+        <li><a href="#" class="nav-link" data-target="report-management"><i class="fas fa-file-contract"></i><span>报告管理</span></a></li>
+        <li><a href="#" class="nav-link" data-target="meeting-management"><i class="fas fa-calendar-alt"></i><span>会议管理</span></a></li>
+      </ul>
+    </li>
+
+    <!-- 分隔线 -->
+    <li class="nav-divider"></li>
+
+    <!-- 审计与监控部分 -->
+    <li class="nav-group-header">
+      <span>审计与监控</span>
+      <i class="fas fa-chevron-down group-toggle" data-group="audit-monitoring"></i>
+    </li>
+    <li class="nav-group audit-monitoring" style="display: block;">
+      <ul>
+        <li><a href="#" class="nav-link" data-target="audit-log"><i class="fas fa-shield-alt"></i><span>操作审计</span></a></li>
+      </ul>
+    </li>
+  </ul>
+  </div>
+</aside>
+
+<main class="main-content">
+  <header class="topbar">
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input type="text" id="global-search-input" placeholder="搜索用户、资料或模块..." aria-label="全局搜索">
+    </div>
+    <div class="user-actions">
+      <div class="notification-panel" id="notification-panel" style="display:none;">
+        <div class="notification-header">新消息</div>
+        <ul id="notification-list"></ul>
+        <button class="btn btn-sm btn-outline" id="mark-read-btn">全部已读</button>
+      </div>
+      <div class="notification" id="notification-icon">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge" id="notification-count">0</span>
+      </div>
+      <div class="user-profile">
+        <div class="user-avatar gradient-bg">
+          <i class="fas fa-user-cog"></i>
+        </div>
+        <div>
+          <div class="user-name" id="admin-name">管理员</div>
+          <div class="user-role" id="admin-level">超级管理员</div>
+        </div>
+        <div class="logout-btn">
+          <a href="#" id="admin-logout" class="logout-link"><i class="fas fa-sign-out-alt"></i> 退出</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 仪表盘 -->
+  <div id="dashboard" class="page active">
+    <div class="page-title">
+      <h1><i class="fas fa-tachometer-alt"></i> 系统仪表盘</h1>
+      <div class="date-filter">
+        <label for="date-range-select">时间范围：</label>
+        <select id="date-range-select" class="form-control">
+          <option value="7">最近7天</option>
+          <option value="30" selected>最近30天</option>
+          <option value="90">最近90天</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-card primary">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="total-users">0</h3>
+          <p>用户总数</p>
+        </div>
+      </div>
+      <div class="stat-card warning">
+        <div class="stat-icon">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="pending-materials">0</h3>
+          <p>待审核资料</p>
+        </div>
+      </div>
+      <div class="stat-card success">
+        <div class="stat-icon">
+          <i class="fas fa-user-plus"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="new-users">0</h3>
+          <p>新注册用户</p>
+        </div>
+      </div>
+      <div class="stat-card danger">
+        <div class="stat-icon">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="pending-issues">0</h3>
+          <p>待处理问题</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card stats-card">
+      <div class="card-header">
+        <h2><i class="fas fa-chart-line"></i> 数据概览</h2>
+      </div>
+      <div class="chart-container">
+        <canvas id="stats-chart"></canvas>
+      </div>
+      <div class="wave-effect"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-history"></i> 最近系统活动</h2>
+        <button class="btn btn-sm btn-outline" id="view-all-activities">查看全部</button>
+      </div>
+      <!-- 添加滚动容器 -->
+      <div class="scrollable-container activity-scroll-container">
+        <div class="activity-list" id="recent-activities"></div>
+      </div>
+    </div>
+
+    <!-- 操作历史 -->
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-history"></i> 操作历史</h2>
+        <div class="date-filter">
+          <label for="history-start-date">开始日期：</label>
+          <input type="date" id="history-start-date" aria-label="开始日期">
+          <label for="history-end-date">结束日期：</label>
+          <input type="date" id="history-end-date" aria-label="结束日期">
+          <button class="btn btn-sm btn-primary" id="filter-history">筛选</button>
+        </div>
+      </div>
+      <div class="activity-list" id="activity-history-container"></div>
+    </div>
+  </div>
+
+  <!-- 用户管理 -->
+  <div id="user-management" class="page">
+    <div class="page-title">
+      <h1><i class="fas fa-users"></i> 用户管理</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="add-user-btn"><i class="fas fa-plus"></i> 添加用户</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>用户列表</h2>
+        <div class="table-actions">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="user-search-input" placeholder="搜索用户..." aria-label="搜索用户">
+          </div>
+        </div>
+      </div>
+      <div class="scrollable-container table-scroll-container">
+        <table id="users-table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>用户名</th>
+            <th>角色</th>
+            <th>等级</th> <!-- 新增列 -->
+            <th>邮箱</th>
+            <th>状态</th>
+            <th>注册时间</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="pagination-controls" id="users-pagination"></div>
+    </div>
+
+    <div class="skeleton-loader" id="user-skeleton">
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+    </div>
+  </div>
+
+  <!-- 资料审核 -->
+  <div id="material-review" class="page">
+    <div class="page-title">
+      <h1><i class="fas fa-file-alt"></i> 资料审核</h1>
+      <div class="header-actions">
+        <button class="btn btn-outline" id="material-filter-btn"><i class="fas fa-filter"></i> 筛选</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>待审核资料</h2>
+        <div class="tabs">
+          <div class="tab active" data-status="all">全部</div>
+          <div class="tab" data-status="pending">待审核</div>
+          <div class="tab" data-status="approved">已通过</div>
+          <div class="tab" data-status="rejected">已拒绝</div>
+        </div>
+      </div>
+      <div class="scrollable-container table-scroll-container">
+        <table id="material-table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>原始文件名</th>  <!-- 新增列 -->
+            <th>上传者</th>
+            <th>时间</th>
+            <th>类型</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="table-footer">
+        <div class="pagination-controls" id="material-pagination"></div>
+      </div>
+    </div>
+
+    <div class="skeleton-loader" id="material-skeleton">
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+    </div>
+  </div>
+
+  <!-- 资料管理页面 -->
+  <div id="material-management" class="page">
+    <div class="page-title">
+      <h1><i class="fas fa-archive"></i> 资料管理</h1>
+      <div class="header-actions">
+        <button class="btn btn-outline" id="material-management-filter-btn">
+          <i class="fas fa-filter"></i> 筛选
+        </button>
+        <button class="btn btn-primary" id="add-material-btn">
+          <i class="fas fa-plus"></i> 添加资料
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>资料列表</h2>
+        <div class="table-actions">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="material-management-search-input" placeholder="搜索资料..." aria-label="搜索资料">
+          </div>
+        </div>
+      </div>
+      <div class="scrollable-container table-scroll-container">
+        <table id="material-management-table">
+          <thead>
+          <tr>
+            <th>选择</th>
+            <th>ID</th>
+            <th>名称</th>
+            <th>原始文件名</th>  <!-- 新增列 -->
+            <th>上传者</th>
+            <th>上传者详情</th>
+            <th>上传时间</th>
+            <th>类型</th>
+            <th>分类</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="pagination-controls" id="material-management-pagination"></div>
+    </div>
+
+    <div class="skeleton-loader" id="material-management-skeleton">
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+    </div>
+  </div>
+
+  <!-- 注册审核 -->
+  <div id="registration-review" class="page">
+    <div class="page-title">
+      <h1><i class="fas fa-user-plus"></i> 注册审核</h1>
+      <div class="header-actions">
+        <button class="btn btn-outline" id="export-btn"><i class="fas fa-download"></i> 导出</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>待审核用户</h2>
+      </div>
+      <div class="scrollable-container table-scroll-container">
+        <table id="registration-table">
+          <thead><tr>
+            <th>ID</th><th>用户名</th><th>邮箱</th><th>申请时间</th><th>状态</th><th>操作</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="table-footer">
+        <div class="pagination-controls" id="registration-pagination"></div>
+      </div>
+    </div>
+
+    <div class="skeleton-loader" id="registration-skeleton">
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+    </div>
+  </div>
+
+  <!-- 权限管理 -->
+  <div id="permission-management" class="page">
+    <div class="page-title">
+      <h1><i class="fas fa-lock"></i> 权限管理</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="add-permission-btn"><i class="fas fa-plus"></i> 添加权限</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>权限列表</h2>
+      </div>
+      <div class="scrollable-container permission-scroll-container">
+        <div class="permission-grid" id="permission-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 在用户模态框中添加用户等级字段 -->
+  <div class="modal" id="user-modal">
+    <div class="modal-content">
+      <!-- 模态框头部 -->
+      <div class="modal-header">
+        <h3><i class="fas fa-user-plus"></i> <span id="user-modal-title">用户信息登记</span></h3>
+        <span class="modal-close">&times;</span>
+      </div>
+
+      <div class="modal-body">
+        <form class="user-form" id="user-form">
+          <input type="hidden" name="id" id="user-form-id">
+
+          <!-- 已有表单字段 -->
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="user-form-username">用户名</label>
+                <input type="text" id="user-form-username" name="username" class="form-control" placeholder="输入用户名" required>
+              </div>
+            </div>
+            <div class="form-col">
+              <div class="form-group">
+                <label for="user-form-email">邮箱</label>
+                <input type="email" id="user-form-email" name="email" class="form-control" placeholder="输入邮箱" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- 密码字段 -->
+          <div class="form-row" id="password-fields">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="user-form-password">密码</label>
+                <input type="password" id="user-form-password" name="password" class="form-control" placeholder="输入密码">
+              </div>
+            </div>
+            <div class="form-col">
+              <div class="form-group">
+                <label for="user-form-confirm-password">确认密码</label>
+                <input type="password" id="user-form-confirm-password" name="confirmPassword" class="form-control" placeholder="再次输入密码">
+              </div>
+            </div>
+          </div>
+
+          <!-- 暗号字段 -->
+          <div class="form-row" id="secret-field">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="user-form-secret">安全暗号</label>
+                <input type="text" id="user-form-secret" name="secret" class="form-control"
+                       placeholder="用于找回密码的安全暗号" required>
+                <small class="form-text text-muted">请设置一个便于记忆的安全暗号，用于找回密码</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- 角色选择 -->
+          <div class="form-group">
+            <label for="user-form-role">用户角色</label>
+            <select id="user-form-role" name="role" class="form-control" required>
+              <option value="temporary">临时用户</option>
+              <option value="user">普通用户</option>
+              <option value="admin">管理员</option>
+            </select>
+          </div>
+
+          <!-- 管理员等级选择器 -->
+          <div class="form-group" id="admin-level-field" style="display:none;">
+            <label for="admin-level-select">管理员等级:</label>
+            <select id="admin-level-select" class="form-control">
+              <option value="1">1级管理员—监察者</option>
+              <option value="2">2级管理员—执法者</option>
+              <option value="3">3级管理员—行政官</option>
+              <option value="4">4级管理员—审判官</option>
+              <option value="5">5级管理员—裁决官</option>
+            </select>
+            <small class="form-text text-muted">仅当用户角色为"管理员"时有效</small>
+          </div>
+
+          <!-- 用户等级选择器 -->
+          <div class="form-group" id="user-level-field" style="display:none;">
+            <label for="user-level-input">用户等级:</label>
+            <input type="number" id="user-level-input" class="form-control" min="1" max="13" value="1">
+            <small class="form-text text-muted">仅当用户角色为"普通用户"时有效 (1-13级)</small>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary modal-close">取消</button>
+        <button class="btn btn-primary" id="save-user-btn">保存用户</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 操作审计页面 -->
+  <div id="audit-log" class="page">
+    <!-- 在审计日志页面添加 -->
+    <div class="skeleton-loader" id="audit-log-skeleton">
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+    </div>
+    <div class="page-title">
+      <h1><i class="fas fa-shield-alt"></i> 操作审计</h1>
+      <div class="date-filter">
+        <label for="audit-start-date">开始日期：</label>
+        <input type="date" id="audit-start-date" aria-label="开始日期">
+        <label for="audit-end-date">结束日期：</label>
+        <input type="date" id="audit-end-date" aria-label="结束日期">
+        <button class="btn btn-sm btn-primary" id="filter-audit">筛选</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>操作历史</h2>
+      </div>
+      <div class="scrollable-container activity-scroll-container">
+        <div class="activity-list" id="audit-log-container"></div>
+      </div>
+      <div class="table-footer">
+        <div class="pagination-controls" id="audit-log-pagination"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 更新报告管理页面 -->
+  <div id="report-management" class="page">
+    <div class="page-title">
+      <h1><i class="fas fa-file-contract"></i> 报告管理</h1>
+      <div class="header-actions">
+        <div class="tabs">
+          <div class="tab active" data-status="all">全部</div>
+          <div class="tab" data-status="pending">待审核</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>报告列表</h2>
+        <div class="table-actions">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="report-search-input" placeholder="搜索报告..." aria-label="搜索报告">
+          </div>
+        </div>
+      </div>
+      <div class="scrollable-container table-scroll-container">
+        <table id="report-table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>提交人</th>
+            <th>提交时间</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="pagination-controls" id="report-pagination"></div>
+    </div>
+
+    <div class="skeleton-loader" id="report-skeleton">
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+    </div>
+  </div>
+
+  <!-- 更新会议管理页面 -->
+  <div id="meeting-management" class="page">
+    <div class="page-title">
+      <h1><i class="fas fa-calendar-alt"></i> 会议管理</h1>
+      <div class="header-actions">
+        <div class="tabs">
+          <div class="tab active" data-status="all">全部</div>
+          <div class="tab" data-status="pending">待审核</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>会议列表</h2>
+        <div class="table-actions">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="meeting-search-input" placeholder="搜索会议..." aria-label="搜索会议">
+          </div>
+        </div>
+      </div>
+      <div class="scrollable-container table-scroll-container">
+        <table id="meeting-table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>会议主题</th>
+            <th>组织者</th>
+            <th>会议时间</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="pagination-controls" id="meeting-pagination"></div>
+    </div>
+
+    <div class="skeleton-loader" id="meeting-skeleton">
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+    </div>
+  </div>
+
+  <!-- 任务管理页面 -->
+  <div id="task-management" class="page">
+    <div class="page-title">
+      <h1><i class="fas fa-tasks"></i> 任务管理</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="add-task-btn"><i class="fas fa-plus"></i> 添加任务</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>任务列表</h2>
+        <div class="table-actions">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="task-search-input" placeholder="搜索任务..." aria-label="搜索任务">
+          </div>
+          <div class="filter-options">
+            <select id="status-filter" class="form-control">
+              <option value="">全部状态</option>
+              <option value="0">待审核</option>
+              <option value="1">已通过</option>
+              <option value="2">已拒绝</option>
+              <option value="3">进行中</option>
+              <option value="4">已完成</option>
+            </select>
+            <select id="priority-filter" class="form-control">
+              <option value="">全部优先级</option>
+              <option value="1">低</option>
+              <option value="2">中</option>
+              <option value="3">高</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="scrollable-container table-scroll-container">
+        <table id="task-table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>负责人</th>
+            <th>优先级</th>
+            <th>状态</th>
+            <th>进度</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="pagination-controls" id="task-pagination"></div>
+    </div>
+
+    <div class="skeleton-loader" id="task-skeleton">
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+    </div>
+  </div>
+
+  <!-- 任务审核页面 -->
+  <div id="task-review" class="page">
+    <div class="page-title">
+      <h1><i class="fas fa-clipboard-check"></i> 任务审核</h1>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>待审核任务</h2>
+      </div>
+      <div class="scrollable-container table-scroll-container">
+        <table id="task-review-table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>负责人</th>
+            <th>优先级</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="pagination-controls" id="task-review-pagination"></div>
+    </div>
+
+    <div class="skeleton-loader" id="task-review-skeleton">
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+    </div>
+  </div>
+
+  <!-- 更新公告管理页面 -->
+  <div id="announcement-management" class="page">
+    <div class="page-title">
+      <h1><i class="fas fa-bullhorn"></i> 公告管理</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="add-announcement-btn"><i class="fas fa-plus"></i> 添加公告</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>公告列表</h2>
+      </div>
+      <div class="scrollable-container table-scroll-container">
+        <table id="announcement-table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>内容摘要</th>
+            <th>发布人</th>  <!-- 新增列 -->
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="table-footer">
+          <div class="pagination-controls" id="announcement-pagination"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="skeleton-loader" id="announcement-skeleton">
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+      <div class="skeleton-row"></div>
+    </div>
+  </div>
+
+  <!-- 添加公告模态框 -->
+  <div class="modal" id="announcement-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-bullhorn"></i> <span id="announcement-modal-title">添加公告</span></h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="announcement-form">
+          <input type="hidden" id="announcement-id">
+          <div class="form-group">
+            <label for="announcement-title">公告标题</label>
+            <input type="text" id="announcement-title" class="form-control" placeholder="输入公告标题" required>
+          </div>
+          <!-- 添加发布人字段 -->
+          <div class="form-group">
+            <label for="announcement-publisher">发布人</label>
+            <input type="text" id="announcement-publisher" class="form-control"
+                   placeholder="输入发布人姓名" required>
+          </div>
+          <div class="form-group">
+            <label for="announcement-content">公告内容</label>
+            <textarea id="announcement-content" class="form-control"
+                      placeholder="输入公告内容" rows="5" required></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary modal-close">取消</button>
+        <button class="btn btn-primary" id="save-announcement-btn">保存公告</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加/编辑任务模态框 -->
+  <div class="modal" id="task-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-tasks"></i> <span id="task-modal-title">添加任务</span></h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="task-form">
+          <input type="hidden" id="task-id">
+          <div class="form-group">
+            <label for="task-title">任务标题</label>
+            <input type="text" id="task-title" class="form-control" placeholder="输入任务标题" required>
+          </div>
+          <div class="form-group">
+            <label for="task-description">任务描述</label>
+            <textarea id="task-description" class="form-control" placeholder="输入任务描述" rows="4"></textarea>
+          </div>
+          <!-- 在任务模态框中修改负责人选择部分 -->
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="task-assignee">负责人</label>
+                <select id="task-assignee" class="form-control" required>
+                  <option value="">选择负责人</option>
+                  <!-- 管理员选项将通过JavaScript动态加载 -->
+                </select>
+              </div>
+            </div>
+            <div class="form-col">
+              <div class="form-group">
+                <label for="task-priority">优先级</label>
+                <select id="task-priority" class="form-control" required>
+                  <option value="1">低</option>
+                  <option value="2" selected>中</option>
+                  <option value="3">高</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 修改附件部分 -->
+          <div class="form-group">
+            <label for="task-attachment">附件 (可选)</label>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+              <input type="file" id="task-attachment" class="form-control" style="flex: 1;">
+              <button type="button" class="btn btn-outline" id="select-from-material">
+                <i class="fas fa-database"></i> 从资料库选择
+              </button>
+            </div>
+            <div id="selected-material-info" style="display: none; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span id="selected-material-name"></span>
+                <button type="button" class="btn btn-sm btn-danger" id="remove-material">
+                  <i class="fas fa-times"></i> 移除
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary modal-close">取消</button>
+        <button class="btn btn-primary" id="save-task-btn">保存任务</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 任务审核模态框 -->
+  <div class="modal" id="task-review-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-clipboard-check"></i> 审核任务</h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="task-review-info">
+          <h4 id="review-task-title"></h4>
+          <p id="review-task-description"></p>
+          <div class="task-details">
+            <span><strong>负责人:</strong> <span id="review-task-assignee"></span></span>
+            <span><strong>优先级:</strong> <span id="review-task-priority"></span></span>
+            <span><strong>创建时间:</strong> <span id="review-task-create-time"></span></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="review-comment">审核意见</label>
+          <textarea id="review-comment" class="form-control" placeholder="请输入审核意见..." rows="3"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary modal-close">取消</button>
+        <button class="btn btn-danger" id="reject-task-btn">拒绝</button>
+        <button class="btn btn-success" id="approve-task-btn">通过</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用户状态模态框 -->
+  <div id="status-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>更新用户状态</h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="status-select">选择状态:</label>
+          <select id="status-select" class="form-control">
+            <option value="active">活跃</option>
+            <option value="inactive">禁用</option>
+            <option value="pending">待审核</option>
+          </select>
+        </div>
+        <div class="form-group" id="reason-field" style="display:none;">
+          <label for="reason-text">原因说明:</label>
+          <textarea id="reason-text" class="form-control" placeholder="请输入原因..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary modal-close">取消</button>
+        <button class="btn btn-primary" id="confirm-status-change">确认更新</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 拒绝理由模态框 -->
+  <div id="reject-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>拒绝操作</h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="reject-reason">请输入拒绝原因:</label>
+          <textarea id="reject-reason" class="form-control" placeholder="请输入详细原因..." required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary modal-close">取消</button>
+        <button class="btn btn-danger" id="confirm-reject">确认拒绝</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 资料预览模态框 -->
+  <div id="preview-modal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h3>资料预览</h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="preview-content" style="max-height: 600px; overflow: auto;">
+          <!-- 预览内容将动态加载 -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary modal-close">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加权限模态框 -->
+  <div id="permission-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-plus"></i> <span id="permission-modal-title">添加权限</span></h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="permission-form">
+          <input type="hidden" id="permission-id">
+          <div class="form-group">
+            <label for="permission-name">权限名称</label>
+            <input type="text" id="permission-name" class="form-control" placeholder="输入权限名称" required>
+          </div>
+          <div class="form-group">
+            <label for="permission-description">权限描述</label>
+            <textarea id="permission-description" class="form-control" placeholder="输入权限描述" rows="3" required></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary modal-close">取消</button>
+        <button class="btn btn-primary" id="save-permission-btn">保存权限</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 权限分配弹窗 -->
+  <div class="modal" id="assign-permission-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3>为 <span id="assign-username">用户</span> 分配权限</h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="permission-list-container" class="permission-grid"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary modal-close">取消</button>
+        <button class="btn btn-primary" id="save-assign-btn">保存权限</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 权限详情弹窗 -->
+  <div id="permission-detail-modal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3>管理员权限详情</h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div class="permission-icon-bg">
+            <i id="permission-icon" class="fas fa-user-shield"></i>
+          </div>
+          <h2 id="permission-level-text" style="margin: 10px 0;"></h2>
+        </div>
+        <div class="permission-description-box">
+          <p id="permission-level-description"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary modal-close">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加资料模态框 -->
+  <div class="modal" id="add-material-modal">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3><i class="fas fa-plus"></i> 上传资料</h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="add-material-form" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="material-name">资料名称</label>
+            <input type="text" id="material-name" class="form-control" placeholder="输入资料名称" required>
+          </div>
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="material-category-add">资料类别</label>
+                <select id="material-category-add" class="form-control" required>
+                  <option value="">选择类别</option>
+                  <option value="COMPETITION">竞赛资料</option>
+                  <option value="LEARNING">学习资料</option>
+                  <option value="WEBSITE">网站资料</option>
+                  <option value="TEACHING">教学资料</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-col">
+              <div class="form-group">
+                <label for="material-type-add">资料格式</label>
+                <select id="material-type-add" class="form-control" required>
+                  <option value="">选择格式</option>
+                  <!-- 文档类 -->
+                  <optgroup label="文档">
+                    <option value="WORD">Word 文档 (.doc/.docx)</option>
+                    <option value="PDF">PDF 文档 (.pdf)</option>
+                    <option value="PPT">PowerPoint (.ppt/.pptx)</option>
+                    <option value="EXCEL">Excel (.xls/.xlsx)</option>
+                    <option value="TEXT">纯文本 (.txt)</option>
+                    <option value="MARKDOWN">Markdown (.md)</option>
+                  </optgroup>
+                  <!-- 图像类 -->
+                  <optgroup label="图像">
+                    <option value="JPG">JPEG 图像 (.jpg/.jpeg)</option>
+                    <option value="PNG">PNG 图像 (.png)</option>
+                    <option value="GIF">GIF 图像 (.gif)</option>
+                    <option value="SVG">矢量图 (.svg)</option>
+                  </optgroup>
+                  <!-- 视频类 -->
+                  <optgroup label="视频">
+                    <option value="MP4">MP4 视频 (.mp4)</option>
+                    <option value="AVI">AVI 视频 (.avi)</option>
+                    <option value="MOV">QuickTime (.mov)</option>
+                    <option value="WMV">Windows Media (.wmv)</option>
+                  </optgroup>
+                  <!-- 音频类 -->
+                  <optgroup label="音频">
+                    <option value="MP3">MP3 音频 (.mp3)</option>
+                    <option value="WAV">WAV 音频 (.wav)</option>
+                    <option value="FLAC">无损音频 (.flac)</option>
+                  </optgroup>
+                  <!-- 其他格式 -->
+                  <optgroup label="其他格式">
+                    <option value="ARCHIVE">压缩文件 (.zip/.rar)</option>
+                    <option value="CODE">代码文件 (.js/.java/.py)</option>
+                    <option value="DATASET">数据集 (.csv/.json)</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="material-file">选择文件</label>
+            <div class="file-upload-area" id="file-upload-area">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>拖放文件到这里或点击上传</p>
+              <span class="file-types">支持 Word, PDF, Excel, 图片等格式</span>
+              <input type="file" id="material-file" class="file-input" required>
+            </div>
+            <div id="file-preview" style="display: none; margin-top: 15px;">
+              <div class="file-preview-card">
+                <i class="fas fa-file"></i>
+                <div class="file-info">
+                  <span class="file-name"></span>
+                  <span class="file-size"></span>
+                </div>
+                <button type="button" class="btn btn-sm btn-danger" id="remove-file">移除</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="material-description">资料描述 (可选)</label>
+            <textarea id="material-description" class="form-control" rows="3" placeholder="输入资料描述..."></textarea>
+          </div>
+          <!-- 在现有的表单字段后添加 -->
+          <div class="form-group">
+            <label for="material-tags">标签 (可选)</label>
+            <input type="text" id="material-tags" class="form-control" placeholder="输入标签，用逗号分隔">
+          </div>
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="material-version">版本 (可选)</label>
+                <input type="text" id="material-version" class="form-control" placeholder="输入版本号">
+              </div>
+            </div>
+            <div class="form-col">
+              <div class="form-group">
+                <label for="material-language">语言 (可选)</label>
+                <select id="material-language" class="form-control">
+                  <option value="">选择语言</option>
+                  <option value="zh">中文</option>
+                  <option value="en">英文</option>
+                  <option value="ja">日文</option>
+                  <option value="other">其他</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary modal-close">取消</button>
+        <button class="btn btn-primary" id="save-material-btn">上传资料</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 资料管理筛选模态框 -->
+  <div class="modal" id="material-management-filter-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3><i class="fas fa-filter"></i> 资料筛选</h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="material-management-category">资料类别</label>
+          <select id="material-management-category" class="form-control">
+            <option value="">全部类别</option>
+            <option value="COMPETITION">竞赛资料</option>
+            <option value="LEARNING">学习资料</option>
+            <option value="WEBSITE">网站资料</option>
+            <option value="TEACHING">教学资料</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="material-management-type">资料格式</label>
+          <select id="material-management-type" class="form-control">
+            <option value="">全部格式</option>
+            <!-- 文档类 -->
+            <optgroup label="文档">
+              <option value="WORD">Word 文档 (.doc/.docx)</option>
+              <option value="PDF">PDF 文档 (.pdf)</option>
+              <option value="PPT">PowerPoint (.ppt/.pptx)</option>
+              <option value="EXCEL">Excel (.xls/.xlsx)</option>
+              <option value="TEXT">纯文本 (.txt)</option>
+              <option value="MARKDOWN">Markdown (.md)</option>
+            </optgroup>
+            <!-- 图像类 -->
+            <optgroup label="图像">
+              <option value="JPG">JPEG 图像 (.jpg/.jpeg)</option>
+              <option value="PNG">PNG 图像 (.png)</option>
+              <option value="GIF">GIF 图像 (.gif)</option>
+              <option value="SVG">矢量图 (.svg)</option>
+            </optgroup>
+            <!-- 视频类 -->
+            <optgroup label="视频">
+              <option value="MP4">MP4 视频 (.mp4)</option>
+              <option value="AVI">AVI 视频 (.avi)</option>
+              <option value="MOV">QuickTime (.mov)</option>
+              <option value="WMV">Windows Media (.wmv)</option>
+            </optgroup>
+            <!-- 音频类 -->
+            <optgroup label="音频">
+              <option value="MP3">MP3 音频 (.mp3)</option>
+              <option value="WAV">WAV 音频 (.wav)</option>
+              <option value="FLAC">无损音频 (.flac)</option>
+            </optgroup>
+            <!-- 其他格式 -->
+            <optgroup label="其他格式">
+              <option value="ARCHIVE">压缩文件 (.zip/.rar)</option>
+              <option value="CODE">代码文件 (.js/.java/.py)</option>
+              <option value="DATASET">数据集 (.csv/.json)</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="material-management-status">状态</label>
+          <select id="material-management-status" class="form-control">
+            <option value="all">全部状态</option>
+            <option value="pending">待审核</option>
+            <option value="approved" selected>已通过</option>
+            <option value="rejected">已拒绝</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" id="material-management-reset-filter-btn">重置筛选</button>
+        <button class="btn btn-primary" id="material-management-apply-filter-btn">应用筛选</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加资料选择模态框 -->
+  <div class="modal" id="material-select-modal">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h3><i class="fas fa-database"></i> 从资料库选择附件</h3>
+        <span class="modal-close" data-dismiss="material-select-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="table-actions">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="material-select-search" placeholder="搜索资料..." aria-label="搜索资料">
+          </div>
+        </div>
+        <div class="scrollable-container table-scroll-container" style="max-height: 400px;">
+          <table id="material-select-table">
+            <thead>
+            <tr>
+              <th>选择</th>
+              <th>ID</th>
+              <th>名称</th>
+              <th>类型</th>
+              <th>上传时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="pagination-controls" id="material-select-pagination"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" data-dismiss="material-select-modal">取消</button>
+        <button class="btn btn-primary" id="confirm-material-select">确认选择</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增筛选模态框 -->
+  <div class="modal" id="material-filter-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3><i class="fas fa-filter"></i> 资料筛选</h3>
+        <span class="modal-close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="material-category">资料类别</label>
+          <select id="material-category" class="form-control">
+            <option value="">全部类别</option>
+            <option value="COMPETITION">竞赛资料</option>
+            <option value="LEARNING">学习资料</option>
+            <option value="WEBSITE">网站资料</option>
+            <option value="TEACHING">教学资料</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="material-type">资料格式</label>
+          <select id="material-type" class="form-control">
+            <option value="">全部格式</option>
+            <!-- 文档类 -->
+            <optgroup label="文档">
+              <option value="WORD">Word 文档 (.doc/.docx)</option>
+              <option value="PDF">PDF 文档 (.pdf)</option>
+              <option value="PPT">PowerPoint (.ppt/.pptx)</option>
+              <option value="EXCEL">Excel (.xls/.xlsx)</option>
+              <option value="TEXT">纯文本 (.txt)</option>
+              <option value="MARKDOWN">Markdown (.md)</option>
+            </optgroup>
+            <!-- 图像类 -->
+            <optgroup label="图像">
+              <option value="JPG">JPEG 图像 (.jpg/.jpeg)</option>
+              <option value="PNG">PNG 图像 (.png)</option>
+              <option value="GIF">GIF 图像 (.gif)</option>
+              <option value="SVG">矢量图 (.svg)</option>
+            </optgroup>
+            <!-- 视频类 -->
+            <optgroup label="视频">
+              <option value="MP4">MP4 视频 (.mp4)</option>
+              <option value="AVI">AVI 视频 (.avi)</option>
+              <option value="MOV">QuickTime (.mov)</option>
+              <option value="WMV">Windows Media (.wmv)</option>
+            </optgroup>
+            <!-- 音频类 -->
+            <optgroup label="音频">
+              <option value="MP3">MP3 音频 (.mp3)</option>
+              <option value="WAV">WAV 音频 (.wav)</option>
+              <option value="FLAC">无损音频 (.flac)</option>
+            </optgroup>
+            <!-- 其他格式 -->
+            <optgroup label="其他格式">
+              <option value="ARCHIVE">压缩文件 (.zip/.rar)</option>
+              <option value="CODE">代码文件 (.js/.java/.py)</option>
+              <option value="DATASET">数据集 (.csv/.json)</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" id="reset-filter-btn">重置筛选</button>
+        <button class="btn btn-primary" id="apply-filter-btn">应用筛选</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通知Toast -->
+  <div id="toast-container" class="toast-container"></div>
+</main>
+<script type="module" src="admin.js"></script>
+</body>
+</html>

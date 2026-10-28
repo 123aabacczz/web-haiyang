@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>团队目录 - 知识协作平台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="./team-directory.css" />
+    <style>
+        .module-header{margin-bottom:1.5rem}
+        .module-grid{display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+        .member-card{text-align:center;padding:1.5rem;border:1px solid var(--border-color);border-radius:var(--radius);background:var(--card-bg)}
+        .member-avatar{width:70px;height:70px;border-radius:50%;background:var(--primary-color);color:#fff;margin:0 auto .8rem;font-size:2rem;display:flex;align-items:center;justify-content:center}
+        .member-contact{font-size:.85rem;color:var(--text-light);margin:.4rem 0}
+        .create-team-btn { margin-top: 1rem; }
+    </style>
+</head>
+<body>
+<header id="header-nav"></header>
+
+<main class="main-content">
+    <div class="container">
+        <div class="module-header">
+            <h2 class="module-title"><i class="fas fa-users"></i> 团队目录</h2>
+            <p class="module-subtitle">查找团队成员和信息</p>
+        </div>
+
+        <!-- 添加团队选择器 -->
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="team-selector">选择团队:</label>
+            <select id="team-selector" class="form-control">
+                <option value="">加载中...</option>
+            </select>
+        </div>
+
+        <div id="no-team-message" class="alert alert-info" style="display: none;">
+            <i class="fas fa-info-circle"></i> 您还没有加入任何团队，<a href="/create-team" class="alert-link">点击这里创建团队</a> 或联系管理员加入现有团队。
+        </div>
+
+        <div class="search-box" style="margin-bottom:1.5rem; display: none;" id="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="member-search" placeholder="搜索团队成员..." />
+        </div>
+
+        <div class="module-grid" id="member-grid">
+            <div class="skeleton-container">
+                <div class="skeleton-item"><div class="skeleton" style="width:100%;height:200px;border-radius:var(--radius)"></div></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- 在 </main> 标签前添加模态框结构 -->
+<div class="modal-overlay" id="member-detail-modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>成员详情</h3>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="member-detail">
+                <div class="detail-avatar">
+                    <img id="detail-avatar" src="" alt="成员头像" onerror="this.src='/static/images/default-avatar.jpg'">
+                </div>
+                <div class="detail-info">
+                    <h2 id="detail-username">未命名用户</h2>
+                    <p class="detail-role" id="detail-role">成员</p>
+                    <p class="detail-position" id="detail-position">未设置职位</p>
+                    <div class="detail-contact">
+                        <p><i class="fas fa-envelope"></i> <span id="detail-email">未设置邮箱</span></p>
+                        <p><i class="fas fa-phone"></i> <span id="detail-contact">未设置联系方式</span></p>
+                    </div>
+                    <p class="join-date">加入时间: <span id="detail-join-date">未知</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal()">关闭</button>
+            <button class="btn btn-primary" id="detail-send-message-btn">发送消息</button>
+        </div>
+    </div>
+</div>
+
+<script src="./team-directory.js" type="module"></script>
+</body>
+</html>
